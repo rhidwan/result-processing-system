@@ -1,0 +1,92 @@
+{% load static %}
+
+<div class="card  border border-light mb-2">
+    <div class="card-header bg-default" id="application{{forloop.counter}}e">
+      <div class="row" data-toggle="collapse" data-target="#collapseapplication{{forloop.counter}}" aria-expanded="true"
+        aria-controls="collapseapplication{{forloop.counter}}">
+       
+        <div class="col-10">
+          <div class="d-flex align-items-center">
+            <div class="avatar flex-shrink-0 me-3 align-items-center">
+              <img src="{% static 'img/course.png' %}" alt="User" class="rounded">
+            </div>
+            <div class="d-flex w-100 flex-wrap align-items-baseline justify-content-between gap-2">
+              
+              <div class="me-2">
+                <small class="text-muted d-block mb-1">Academic Year</small>
+                <p class="mb-0">{{course.semester.academic_year}}</p>
+              </div>
+
+              <div class="me-2">
+                <small class="text-muted d-block mb-1">Course</small>
+                <p class="mb-0" data-bs-toggle="tooltip" data-bs-offset="0,4" 
+                data-bs-placement="right" data-bs-html="true" 
+                title="" data-bs-original-title="<span>{{course.name}}<br>Credit:{{course.credit_point}}<br>Semester:{{ course.semester.name }}</span>">
+                {{course.course_code}}
+                </p>
+               
+              </div>
+             
+              <div class="me-2">
+                <small class="text-muted d-block mb-1">Teacher</small>
+                <p class="mb-0"><img src="{% if course.teacher.gender == 0 %}
+                  {% static 'img/male_avatar.svg' %}
+                  {% else %}
+                  {% static 'img/female_avatar.svg' %}
+                  {% endif %}" class="avatar-xs" alt=""> {{course.teacher.full_name }}</p>
+              </div>
+              <div class="me-2">
+                <small class="text-muted d-block mb-1">Examiner</small>
+                {% for member in course.examiner.all  %}<p class="mb-0">
+                  <img src="{% if member.gender == 0 %}
+                  {% static 'img/male_avatar.svg' %}
+                  {% else %}
+                  {% static 'img/female_avatar.svg' %}
+                  {% endif %}" class="avatar-xs" alt="">{{ member.full_name }}
+                </p>{% endfor %} </p>
+              </div>
+              </div>
+              </div>
+              </div>
+
+              <div class="col-2 d-flex justify-content-end align-items-center gap-1">
+               
+                <div class="dropdown">
+                    <button class="btn p-0" type="button" id="application{{forloop.counter}}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="bx bx-dots-vertical-rounded"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="application{{forloop.counter}}">
+                      {% if disable_view == True %}
+                     
+                      {% else %}
+                      <a href="{% url 'course_details' course.id %}"  class="dropdown-item">
+                        <span class="">View</span>
+                         </a>
+                         {% endif %}
+                      {% url 'edit_course' course.id as course_action %}
+                      <a data-url="{{course_action}}"  data-bs-toggle="modal"
+                      data-title="Edit Course" data-bs-target="#UpdateFormModal" class="dropdown-item">
+                      <span class="">Edit</span>
+                      </a>
+                      <a href="{{course_action}}"  class="ajax-delete dropdown-item">
+                        <span class="">Delete</span>
+                         </a>
+              
+                    
+                    </div>
+                  </div>
+                  </div>
+
+
+                
+    
+                
+            </div>
+            </div>
+          </div>
+
+        
+       
+           
+
+        

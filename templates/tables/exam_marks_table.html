@@ -1,0 +1,72 @@
+{% load static %}
+<div class="table-responsive text-nowrap" >
+    <table class="table card-table table-hover exam_mark-table" id="">
+      <thead>
+        <tr>
+         <th>SL No</th>
+          <th>Code No</th>
+          <th>Mark</th>
+          
+        
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody class="table-border-bottom-0">
+        {% for exam_mark in exam_marks %}
+        <tr>
+        <td>{{forloop.counter}}</td>
+          <td>{{exam_mark.code_no}}</td>
+          <td>{{exam_mark.marks}}</td>
+  
+          <td>
+            <div class="dropdown">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+             
+            </div>
+          </td>
+        </tr>
+       {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  <link rel="stylesheet" href="{% static 'vendor/datatables/dataTables.bootstrap5.min.css' %}">
+
+
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap5.min.js' %}"></script>
+
+
+  {% if split_search == True  %}
+  <script>
+$(document).ready(function () {
+    var table = $('.exam_mark-table').DataTable({ 
+          paging: false,
+            info:false,
+            retrieve:true
+          });
+
+    $('.table-search').keyup(function () {
+        table.search($(this).val()).draw();
+    });
+});
+  </script>
+  
+{% else %}
+
+<script>
+ 
+  $(document).ready(function () {
+    $('.exam_mark-table').DataTable({
+      paging: false,
+        info:false,
+        retrieve:true
+    });
+  });
+</script>
+
+{% endif %}
+
+

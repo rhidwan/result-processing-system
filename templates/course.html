@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% load param_replace %}
+{% block title %}
+Courses | CUBAC
+{% endblock title %}
+
+{% block breadcrumb %}
+<div class="d-flex justify-content-between align-items-center">   
+  <h4 class="fw-bold py-2">
+    <span class="text-muted fw-light"></span>Courses
+   </h4>
+   <div class="d-flex justify-content-center align-items-center">
+    {% if request.user.is_staff %}
+    <button 
+    type="button" 
+    class="btn btn-outline-primary"  
+     data-bs-toggle="modal"
+    data-bs-target="#modalcourse">
+    <i class="bx bx-list-plus d-block d-sm-none"></i>
+    <span class="d-none d-sm-block">Add New</span>
+    </button>
+    {% endif %}
+  </div>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+      <div class="col-lg-12 mb-4 order-0">
+        <div class="card">
+            
+              <div class="card-body searchable-list">
+                <div class="row mb-2">
+                  <div class="col-2">
+                    <input type="search" id="application-search" value="" class="search-div form-control" placeholder="Search">
+                  </div>
+                    <div class="col-10 d-flex">
+                      <div class="dropdown me-2">
+                        {% regroup applications by call_for_application as seasons %}
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Season: {% if filters.season %}{% for group in seasons %} {% if group.grouper.id|stringformat:"s" == filters.season %}{{group.grouper.title}} {%endif%}  {% endfor %} {% endif %}
+                        </button>
+                        <ul class="dropdown-menu  dropdown-menu-end">
+                          <li><a class="dropdown-item {% if not filters.season %}active{% endif %} " href="?{% param_replace season=''  %}">All</a></li>
+                          
+                          {% for group in seasons %}
+                              <li><a class="dropdown-item {% if group.grouper.id|stringformat:'s' == filters.season %}active{% endif %}" href="?{% param_replace season=group.grouper.id  %}">{{ group.grouper.title }}</a></li>
+                          {% endfor %}
+                        </ul>
+                        
+                      </div>
+
+                      <div class="dropdown me-2">
+
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          Status : {{filters.status|default:''}}
+                        </button>
+
+                        <ul class="dropdown-menu  dropdown-menu-end">
+                          <li><a class="dropdown-item {% if not filters.status %}active{% endif %} " href="?{% param_replace status=''  %}">All</a></li>
+                          <li><a class="dropdown-item {% if filters.status == 'approved' %}active{% endif %} " href="?{% param_replace status='approved' %}">Approved</a></li>
+                          <li><a class="dropdown-item {% if filters.status == 'pending' %}active{% endif %} " href="?{% param_replace status='pending' %}">Pending</a></li>
+                        </ul>
+
+                      </div>
+                    </div>
+                 
+                  </div>
+                  {% if courses %}
+                  <div class="row"> 
+
+                    {% for course in courses %}
+                    <div class="col-xs-12">
+                      
+                      {% include 'card/course.html' with course=course %}
+                    </div>
+                    {% endfor %}
+                    
+                  </div>
+                  {% include 'partials/pagination.html' with pagination=courses %}
+
+                  {% else %}
+                  {% include 'card/nodata_small.html' %}
+                  {% endif %}
+                              
+          </div>
+        </div>
+        
+      </div>
+
+      {% include 'modal/form_modals.html' with modal_id="modalcourse" title="New Course" form="course_form" action_name="course" teachers=teachers semesters=semesters %}
+      {% include 'modal/edit_form_modals.html' %}
+{% endblock content %}
+
+{% block modal %}
+
+{% endblock modal %}
+
+

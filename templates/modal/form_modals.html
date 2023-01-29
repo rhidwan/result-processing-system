@@ -1,0 +1,51 @@
+
+        <!-- Modal -->
+<div class="modal fade" id="{{modal_id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered {% if lg_modal %}modal-lg{% endif%}" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">{{title}}</h5>
+                    <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    {% if form == "committee_form" %}
+                        {% include 'form/committee_form.html' with action_name=action_name committee=committee teachers=teachers semesters=semesters  %}
+                
+                    {% elif form == "course_form" %}
+                        {% include 'form/course_form.html' with action_name=action_name course=course %}
+
+                    {% elif form == "student_form" %}
+                        {% include 'form/student_form.html' with action_name=action_name student=student halls=halls%}
+                    
+                    {% elif form == "catm_form" %}
+                        {% include 'form/catm_form.html' with action_name=action_name achievement_membership=achievement_membership %}
+                    
+                    {% elif form == "exam_mark_form" %}
+                        {% include 'form/exam_mark_form.html' with action=action exam_mark=exam_mark %}
+                    
+                    {% elif form == "mark_mappng_form" %}
+                        {% include 'form/mark_mappng_form.html' with action=action mapping=mapping %}
+                    
+                    {% elif form == "non_theory_mark_form" %}
+                        {% include 'form/non_theory_mark_form.html' with action=action exam_mark=exam_mark %}
+                        
+                    {% elif form == "semester_form" %}
+                        {% include 'form/semester_form.html' with action=action  %}
+                    
+                    {% elif form == "academic_year_form" %}
+                        {% include 'form/academic_year_form.html' with action=action  %}
+
+                    {% elif form == "update_user_info" %}
+                        {% include 'form/user_update_form.html' %}
+
+                    {% endif %}
+                </div>
+          
+        </div>
+    </div>
+</div>

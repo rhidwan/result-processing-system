@@ -1,0 +1,33 @@
+{% load static %}
+<form action="{%if action %} {{action}} {% else %} {% url action_name %}{% endif %}" method="post" class="form">
+    {% csrf_token %}
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            
+            <label for="academic_year" class="form-label">Academic Year</label>
+                <select class="form-select" id="academic_year" name="academic_year" aria-label="Select Academic Year" required>
+                    {% for academic_year in academic_years %}
+                    
+                     <option value="{{academic_year.id}}" {% if academic_year == semester.academic_year %}selected{% endif %} >{{academic_year.name}}</option>
+                     {% endfor %}
+                   </select>
+        </div>
+         
+        <div class="mb-3 col-md-6">
+            <label for="semester" class="form-label">Name</label>
+                <select class="form-select" id="semester" name="name" aria-label="Select Method" required>
+                 {% for sem in semester_options %}
+                  <option value="{{sem}}" {% if sem == semester.name %}selected{% endif %} >{{sem}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+    <div class="row help-text text-center text-danger">
+
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary me-2 ajax-submit">Save changes</button>
+
+    </div>
+</form>
+

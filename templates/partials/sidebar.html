@@ -1,0 +1,161 @@
+{% load static %}
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    <div class="app-brand demo">
+      <a href="{% url 'dashboard' %}" class="app-brand-link">
+        <span class="app-brand-logo demo">
+          <img class="img-fluid" src="{% static 'img/cu_logo.svg' %}" alt="">
+        </span>
+        <span class="app-brand-text demo menu-text fw-bolder ms-2">CU EEE</span>
+      </a>
+
+      <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+      </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1 ps ps--active-y">
+      <!-- Dashboard -->
+      <li class="home-menu menu-item">
+        <a href="{% url 'dashboard' %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-home-circle"></i>
+          <div data-i18n="Analytics">Dashboard</div>
+        </a>
+      </li>
+
+      <!-- Layouts -->
+      
+
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Academic</span>
+      </li>
+      <!-- <li class="menu-item">
+        <a href="" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-sun"></i>
+          
+          <div data-i18n="Authentications">Sessions</div>
+        </a>
+      </li> -->
+      <li class="menu-item">
+        <a href="{% url 'student' %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-user-pin"></i>
+          <div data-i18n="Account Settings">Students</div>
+        </a>
+
+      </li>
+      <li class="menu-item">
+        <a href="{% url 'exam_committee' %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-card"></i>
+          <div data-i18n="Authentications">Committee</div>
+        </a>
+      </li>
+ 
+      <li class="menu-item">
+        <a href="{% url 'academic_year' %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-credit-card"></i>
+          <div data-i18n="Authentications">Academic Year</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{% url 'semester' %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-sitemap"></i>
+          <div data-i18n="Authentications">Semesters</div>
+        </a>
+      </li>
+
+      <li class="menu-item">
+        <a href="{% url 'course' %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-credit-card"></i>
+          <div data-i18n="Authentications">Courses</div>
+        </a>
+      </li>
+      <!-- <li class="menu-item">
+        <a href="" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-credit-card"></i>
+          <div data-i18n="Authentications">Result</div>
+        </a>
+      </li> -->
+      <!-- <li class="menu-item">
+        <a href="" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-credit-card"></i>
+          <div data-i18n="Authentications">Tabulation Sheet</div>
+        </a>
+      </li> -->
+
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Misc</span>
+      </li>
+      <li class="menu-item">
+        <a href="" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-user"></i>
+          <div data-i18n="Layouts">Profile</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="" class="menu-link menu-toggle">
+          <i class="menu-icon tf-icons bx bx-bell"></i>
+          <div data-i18n="Authentications">Notice</div>
+        </a>
+      </li>
+    </ul>
+    <div class="menu-inner-shadow"></div>
+    <div class="menu-footer py-1">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-10 d-flex align-items-center mx-0">
+          <div class=" ms-2 me-1">
+            <div class="avatar">
+              <div>
+                <img src="{% if request.user.basic_info.photo %}{% if request.user.basic_info.photo.url %}{{request.user.basic_info.photo.url}}{%else%}{{request.user.basic_info.photo}}{% endif %}{% else %}
+                                {% if request.user.gender == 0 %}
+                                {% static 'img/male_avatar.svg' %}
+                                {% else %}
+                                {% static 'img/female_avatar.svg' %}
+                                {% endif %}
+                            {% endif %}" alt="user-avatar" class="rounded" height="150" width="150" />
+                </div>
+            </div> 
+          </div>
+          <div class="">
+            <div class="fw-semibold d-inline-block truncate">{{request.user.full_name}}</div>
+            <div class="d-inline-block small truncate">{{request.user.email}}</div>
+          </div>
+        </div>
+        <div class="col-2 text-start">
+          <div class="dropup">
+            <span class="dropdown-toggle hide-arrow me-2" data-bs-toggle="dropdown">
+              <i class="menu-icon tf-icons bx bx-dots-vertical"></i>
+            </span>
+           {% include 'partials/user_dropdown.html' with  c="dropdown-menu-start" %}
+          </div>
+  
+        </div>
+      </div>
+     
+      
+    </div>
+
+  </aside>
+
+  <script>
+    $(document).ready(function(){
+      var path = window.location.pathname;
+      if (path == "/") {
+            $('.home-menu').addClass('active'); //#home is the id for root link.
+      }else{
+        $('li.menu-item').each(function(){
+        console.log($(this));
+        if ($(this).find('a').attr("href").indexOf(path) !== -1 ){
+          console.log($(this));
+          $(this).addClass('active')
+        }
+      })
+      }
+
+      
+
+     
+    });
+
+
+  </script>

@@ -1,0 +1,65 @@
+{% load static %}
+<form action="{%if action %} {{action}} {% else %} {% url action_name %}{% endif %}" method="post" class="form">
+    {% csrf_token %}
+    <div class="row">
+       
+         <div class="mb-3 col-md-6">
+            <label for="course_code" class="form-label">Course Code</label>
+            <input class="form-control" type="text" name="course_code" id="course_code"
+                value="{{course.course_code|default:''}}" required/>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="name" class="form-label">Course Name</label>
+            <input class="form-control" type="text" name="name" id="name"
+                value="{{course.name|default:''}}" required/>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="name" class="form-label">Course Type</label>
+            <select class="form-select" id="section" name="course_type" aria-label="Select Course type" required>
+                <option value="Theory" {% if course.course_type == 'Theory' %}selected{%endif %}   >Theory</option>
+                <option value="Lab/FieldWork/Project" {% if course.course_type == 'Lab/FieldWork/Project' %}selected{%endif %} >Practical/Lab/Field Work</option>
+              </select>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="credit_point" class="form-label">Credit Point</label>
+            <input class="form-control" type="number" name="credit_point" id="credit_point"
+                value="{{course.credit_point|default:0}}" required/>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="semester" class="form-label">Semester</label>
+                <select class="form-select" id="semester" name="semester" aria-label="Select Method" required>
+                 {% for semester in semesters %}
+                  <option value="{{semester.id}}" {% if semester == course.semester %}selected{% endif %} >{{semester.academic_year}} - {{semester.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+        <div class="mb-3 col-md-6">
+            <label for="teacher" class="form-label">Teacher</label>
+                <select class="form-select" id="teacher" name="teacher" aria-label="Select Method" required>
+                    {% for teacher in teachers %}
+                    <option value="{{teacher.id}}" {% if teacher == course.teacher %}selected{%endif %}>{{teacher.full_name}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+
+        <div class="mb-3 col-md-6">
+            <label for="examiner" class="form-label">Examiner</label>
+                <select class="form-select" id="examiner" name="examiner" aria-label="Select Method" required multiple>
+                    {% for teacher in teachers %}
+                  <option value="{{teacher.id}}"{% if teacher in course.examiner.all %}selected{% endif %} >{{teacher.full_name}}</option>
+                  {% endfor %}
+                </select>
+                </div>
+
+
+    </div>
+    <div class="row help-text text-center text-danger">
+
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary me-2 ajax-submit">Save changes</button>
+
+    </div>
+</form>
+

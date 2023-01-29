@@ -1,0 +1,50 @@
+{% load static %}
+<form action="{%if action %} {{action}} {% else %} {% url action_name %}{% endif %}" method="post" class="form">
+    {% csrf_token %}
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            
+            <label for="academic_year" class="form-label">Academic Year</label>
+                <select class="form-select" id="academic_year" name="academic_year" aria-label="Select Academic Year" required>
+                    {% for academic_year in academic_years %}
+                    
+                     <option value="{{academic_year.id}}" {% if academic_year == committee.academic_year %}selected{% endif %} >{{academic_year.name}}</option>
+                     {% endfor %}
+                   </select>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="semester" class="form-label">Semester</label>
+                <select class="form-select" id="semester" name="semester" aria-label="Select Method" required multiple>
+                 {% for semester in semesters %}
+                  <option value="{{semester.id}}" {% if semester in committee.semester.all %}selected{% endif %} >{{semester.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+        <div class="mb-3 col-md-6">
+            <label for="chairman" class="form-label">Chairman</label>
+                <select class="form-select" id="chairman" name="chairman" aria-label="Select Method" required>
+                    {% for teacher in teachers %}
+                    <option value="{{teacher.id}}" {% if teacher == committee.chairman %}selected{%endif %}>{{teacher.full_name}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+        <div class="mb-3 col-md-6">
+            <label for="member" class="form-label">Member</label>
+                <select class="form-select" id="member" name="member" aria-label="Select Method" required multiple>
+                    {% for teacher in teachers %}
+                  <option value="{{teacher.id}}"{% if teacher in committee.member.all %}selected{% endif %} >{{teacher.full_name}}</option>
+                  {% endfor %}
+                </select>
+                </div>
+
+
+    </div>
+    <div class="row help-text text-center text-danger">
+
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary me-2 ajax-submit">Save changes</button>
+
+    </div>
+</form>
+

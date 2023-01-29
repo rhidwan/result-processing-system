@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+{% load encode_static %}
+
+{% block title %}
+{{course.name}} | CUBAC
+{% endblock title %}
+
+{% block breadcrumb %}
+<div class="py-2">   
+  <h4 class="fw-bold">
+    <span class="text-muted fw-light"></span>{{course.name}} ({{course.course_code}})
+   </h4>
+   <p>{{course.semester.name}} Semester, {{course.semester.academic_year}}</p>
+
+   <div class="d-flex justify-content-center align-items-center">
+    
+  </div>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+     
+        {% if course %}
+           
+            {% if course.course_type == "Theory" %}
+            <div class="col-xs-12">
+                <!-- Result Card -->
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">   
+                    <h5 class="mb-0">Score</h5>
+                   
+                      
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#modalcatm">
+                        <i class="bx bx-list-plus d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Add CATM</span>
+                    </button>
+                       
+                  
+                </div>
+                <div class="card-body">
+                    {% if scores %}
+                       
+                               {% include 'tables/theory_score_table.html' with scores=scores %}
+                 
+                    {% else %}
+                        {% include 'card/nodata_small.html' %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            </div>
+            
+            <div class="col-xs-12">
+                <!-- Result Card -->
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">   
+                    <h5 class="mb-0">Score</h5>
+                    <div>
+
+                        <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
+                        data-bs-target="#modalexammark">
+                        <i class="bx bx-list-plus d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Add Exam Mark</span>
+                        </button>
+
+                        <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
+                        data-bs-target="#modalmarkmap">
+                        <i class="bx bx-list-plus d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Add Map</span>
+                        </button>
+
+                        
+
+                    </div>
+                  
+                </button>
+                   
+                      
+                       
+                  
+                </div>
+                <div class="card-body">
+                    
+                    {% if exam_marks %}
+                        {% regroup exam_marks by section as sections %}
+                            
+                        <div class="row">
+
+                        {% for group in sections %} 
+                            
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-header d-flex justify-content-between align-items-center">   
+                                            <h5 class="mb-0">Section {{group.grouper}}</h5>
+                                        </div>   
+    
+                                        <div class="card-body">
+                                            {% include 'tables/exam_marks_table.html' with exam_marks=group.list count=forloop.counter %}
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                        
+                            
+                            {% endfor %}
+                        </div>
+                 
+                    {% else %}
+                        {% include 'card/nodata_small.html' %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            </div>
+            {% else %}
+            <div class="col-xs-12">
+                <!-- Result Card -->
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">   
+                    <h5 class="mb-0">Score</h5>
+                    <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
+                        data-bs-target="#modalnontheorymark">
+                        <i class="bx bx-list-plus d-block d-sm-none"></i>
+                        <span class="d-none d-sm-block">Add Mark</span>
+                        </button>
+                </div>
+                <div class="card-body">
+                    
+                    {% if scores %}
+                       
+                        {% include 'tables/non_theory_score_table.html' with scores=scores %}
+      
+                    {% else %}
+                        {% include 'card/nodata_small.html' %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            </div>
+            {% endif %}
+            </div>
+        {% else %}
+            <div class="col-xs-12 mb-4 order-0">
+
+            {% include 'card/nodata.html' %}
+            </div>
+        {% endif %}
+  
+</div>
+    {% url 'catm' as catm_action %}
+    {% concat_all catm_action '?course=' course.id as action %}
+    {% include 'modal/form_modals.html' with modal_id="modalcatm" title="New CATM" form="catm_form" action=action lg_modal=True %}
+
+    {% if course.course_type == "Theory" %}
+
+    {% url 'exam_mark' as exam_mark_action %}
+    {% concat_all exam_mark_action '?course=' course.id as exam_action %}
+    {% include 'modal/form_modals.html' with modal_id="modalexammark" title="Add Exam Score" form="exam_mark_form" action=exam_action  %}
+
+    {% url 'id_code_mapping' as code_mapping_action %}
+    {% concat_all code_mapping_action '?course=' course.id as mapping_action %}
+    {% include 'modal/form_modals.html' with modal_id="modalmarkmap" title="Add Code Student Mapping" form="mark_mappng_form" action=mapping_action  %}
+
+    {% else %}
+
+    {% url 'non_theory_mark' as non_theory_mark_action %}
+    {% concat_all non_theory_mark_action '?course=' course.id as non_theory_action %}
+    {% include 'modal/form_modals.html' with modal_id="modalnontheorymark" title="Add Mark" form="non_theory_mark_form" action=non_theory_action  %}
+    
+    {% endif %}
+    
+    {% endblock content %}
+
+{% block modal %}
+{% include 'modal/edit_form_modals.html' %}
+{% endblock modal %}
+
+

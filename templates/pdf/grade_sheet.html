@@ -1,0 +1,256 @@
+{% load static %}
+{% load calculate_total %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <title>Title</title>
+    <style type="text/css">
+        @page {
+            size: a4;
+            margin: 0.2in 0.44in 0.2in 0.44in;
+        }
+        @media print{
+            *{
+                text-shadow:none!important;
+                color:#000!important;
+                background:transparent!important;
+                box-shadow:none!important;
+                font-size: x-small!important;
+            }
+
+            .small-text,  .small-text td, .small-text th, .small-text img, .small-text p, .small-text sub {
+                font-size: xx-small!important;
+            }
+
+            .small-text table{
+                border-collapse: collapse!important;
+                width: min-content!important;
+                height: min-content!important;
+            }
+
+            table th, table td {
+                padding: 0px!important;
+            }
+            
+        }
+        .align-bottom {
+            display: flex;                   /* defines flexbox */
+            align-items: flex-end; 
+            justify-content: flex-end;
+            align-content: flex-end;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'vendor/css/core.css' %}" />
+</head>
+
+
+<body class="bg-white text-dark">
+    
+    <div class="container">
+        
+        <div class="row d-flex align-items-center">
+            <div class="col-2">
+            </div>
+            <div class="col-7 text-center">
+                <img  style="height: 100px; width:100px;" class=" img-fluid" src="{% static 'img/cu_logo.svg' %}" alt="">
+               
+                <h3>
+                    <strong>  UNIVERSITY OF CHITTAGONG </strong><br>CHITTAGONG, BANGLADESH
+                </h3>
+                
+                <p>Department of Electrical And Electronic Engineering</p>
+                <p><strong>Second Semester BSc Engineering Examination - 2023</strong></p>
+                <p>Held in November - December 2022</p>
+            </div>
+            <div class="col-3 d-flex justify-content-end">
+                <div class="col-6"> <div class="float-end"><strong> Serial No</strong>:</div> </div>
+            </div>
+        </div>
+
+        <div class="row ">
+            <h6 style="text-align:center;margin-top:20px;font-weight: bold;">Grade Sheet</h6>
+        </div>
+ 
+
+        <div class="row p-1">
+            <div class="col-8">
+                <div class="row p-1">
+                    <div class="col-3">Student Id</div>
+                    <div class="col-1">:</div>
+                    <div class="col-8"><strong>{{student.student_id}}</strong></div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-3">Name of the student</div>
+                    <div class="col-1">:</div>
+                    <div class="col-8"><strong>{{student.full_name}}</strong></div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-3">Name of the Hall</div>
+                    <div class="col-1">:</div>
+                    <div class="col-8"><strong>{{student.hall.name}}</strong></div>
+                </div>
+                <div class="row p-1">
+                    <div class="col-3">Session</div>
+                    <div class="col-1">:</div>
+                    <div class="col-8"><strong>{{student.session}}</strong></div>
+                </div>
+            </div>
+            <div class="col-4 small-text">
+                <h5 style="text-align:center;font-weight:bold;">Grading System</h5>
+                <table class="table table-sm table-borderless">
+               
+
+                    <thead>
+                        <tr style="text-align:center;font-weight:bold;">
+                            <td scope="col" class="col-8">Numerical Grade</td>
+                            <td scope="col" class="col-2">Letter Grade</td>
+                            <td scope="col" class="col-2">Grade Point</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>80% or above</td>
+                            <td>A+</td>
+                            <td>4.00</td>
+                        </tr>
+                        <tr>
+                            <td>75% to less than 80%</td>
+                            <td>A</td>
+                            <td>3.75</td>
+                        </tr>
+                        <tr>
+                            <td>70% to less than 75%</td>
+                            <td>A-</td>
+                            <td>3.50</td>
+                        </tr>
+                        <tr>
+                            <td>65% to less than 70%</td>
+                            <td>B+</td>
+                            <td>3.25</td>
+                        </tr>
+                        <tr>
+                            <td>60% to less than 65%</td>
+                            <td>B</td>
+                            <td>3.00</td>
+                        </tr>
+                        <tr>
+                            <td>55% to less than 60%</td>
+                            <td>B-</td>
+                            <td>2.75</td>
+                        </tr>
+                        <tr>
+                            <td>50% to less than 55%</td>
+                            <td>C+</td>
+                            <td>2.50</td>
+                        </tr>
+                        <tr>
+                            <td>45% to less than 50%</td>
+                            <td>C</td>
+                            <td>2.25</td>
+                        </tr>
+                        <tr>
+                            <td>40% to less than 45%</td>
+                            <td>D</td>
+                            <td>2.00</td>
+                        </tr>
+                        <tr>
+                            <td>Less than 40%</td>
+                            <td>F</td>
+                            <td>0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Incompetent or Absent</td>
+                            <td>I</td>
+                            <td>0.00</td>
+                        </tr>
+                        </tbody>
+                    </table>
+            </div>
+         
+      </div>
+      
+      <div class="row p-1">
+        <div class="col-8">
+            <table class="table table-bordered">
+                    <thead>
+                        <tr style="text-align:center;font-weight:bold;">
+                            <td scope="col" class="col-3">Course Code </td>
+                            <td scope="col" class="col-6">Course Title</td>
+                            <td scope="col" class="col-1">Credits</td>
+                            <td scope="col" class="col-1">Letter Grade</td>
+                            <td scope="col" class="col-1">Grade Point</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for score in scores %}
+                        <tr >
+                            <td>{{score.course.course_code}}</td>
+                            <td>{{score.course.name}}</td>
+                            <td class="text-center">{{score.course.credit_point}}</td>
+                            <td class="text-center">{{score.letter_grade|default:""}}</td>
+                            <td class="text-center">{{score.grade_point|default:""}}</td>
+                        </tr>
+                        {% endfor %}
+                      
+                        </tbody>
+                    </table>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-3 small-text">
+            <img  style="height: 100px; width:100px;" class="img-fluid" src="{% static 'img/gpa.svg' %}" alt="">
+
+            <p>Where, <br>'n' is the number of courses offered in a semester <br>'C<sub>i</sub>' is the number of credits assigned to a particular course 'i' <br>'G<sub>i</sub>' is the grade pointcorresponding to the grade obtained for i=th course.</p>
+            
+        </div>
+
+      </div>
+    
+      <div class="row">
+        <div class="col-8">
+            <div class="row">
+                {% calculate_gpa scores=scores semester=semester as status %}  
+
+                <div class="col-8"> 
+                    <p>Total Credit Offered : <strong>{% calculate_credit_offered semester=semester %}</strong></p> 
+                    <p>Total Credit Earned : <strong>{% calculate_credit_earned scores=scores %}</strong></p>
+                </div>
+                <div class="col-4">
+                    <p>GPA : <strong> {{status.0}}</strong></p>
+                    <p>Result : <strong>{{status.1}}</strong></p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <p class="mt-5">Date of Publication: ................................</p>
+                    <p class="mt-5">Prepared By: .................................</p>
+                    
+                </div>
+                <div class="col-6">
+                    <p class="mt-5">Date of Issue : ...............................</p>
+                    <p class="mt-5">Compared By: .................................</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 align-bottom">
+            <div style="text-align:center;float:right;">
+                    
+                Controller of Examination <br>
+                University of Chittagong
+            </div>
+        </div>
+      </div>
+  
+        
+      
+        
+    
+    </div>
+
+
+
+
+</body>
+
+</html>

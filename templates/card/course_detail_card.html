@@ -1,0 +1,44 @@
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+
+            <div class="my-2">
+              <h5 class="fw-bolder">Course Information</h5>
+       
+                <table class="table info-table table-borderless">
+                  <tbody>
+                    
+                    <tr>
+                      <td class="text-end"><small class="text-light fw-semibold">Course Code: </small></td>
+                      <td class="">
+                        <p class="mb-0"> {{course.course_code}}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-end"><small class="text-light fw-semibold">Course Name: </small></td>
+                      <td class="">
+                        <p class="mb-0"> {{course.name}}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                        <td class="text-end"><small class="text-light fw-semibold">Semester : </small></td>
+                        <td class="">
+                          <p class="mb-0">{{course.semester.name}}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-end"><small class="text-light fw-semibold">Academic Year : </small></td>
+                        <td class="">
+                          <p class="mb-0">{{course.semester.academic_year}}</p>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+              
+            </div>
+          </div>
+      
+    </div>
+</div>
+   

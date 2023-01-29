@@ -1,0 +1,80 @@
+{% load static %}
+{% load calculate_total %}
+
+
+<div class="table-responsive text-nowrap" >
+    <table class="table card-table table-hover" id="score-table">
+
+        
+      <thead>
+        <tr>
+          <th>Student</th>
+            {% for course in semester.course_set.all %}
+                <th> {{course.course_code}} </th> 
+            {% endfor %}
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody class="table-border-bottom-0">
+
+        {% for student, value in scores.items %}
+        <tr>
+          <td>{{student.student_id}}</td>
+
+            {% for co in semester.course_set.all %}
+                    {% with value|hash:co.course_code as score %}
+                    <td>{{score.0.letter_grade|default:""}}</td>
+                    {% endwith %}
+            {% endfor %}
+            
+            
+      
+
+          <td>
+            <div class="dropdown">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+             
+            </div>
+          </td>
+        </tr>
+       {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  <link rel="stylesheet" href="{% static 'vendor/datatables/dataTables.bootstrap5.min.css' %}">
+
+
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap5.min.js' %}"></script>
+
+
+  {% if split_search == True  %}
+  <script>
+$(document).ready(function () {
+    var table = $('#score-table').DataTable({ 
+          paging: false,
+            info:false
+          });
+
+    $('#table-search').keyup(function () {
+        table.search($(this).val()).draw();
+    });
+});
+  </script>
+  
+{% else %}
+
+<script>
+ 
+  $(document).ready(function () {
+    $('#score-table').DataTable({
+      paging: false,
+        info:false
+    });
+  });
+</script>
+
+{% endif %}

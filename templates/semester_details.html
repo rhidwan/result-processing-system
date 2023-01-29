@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% load encode_static %}
+
+{% block title %}
+{{course.name}} | CUBAC
+{% endblock title %}
+
+{% block breadcrumb %}
+<div class="d-flex justify-content-between align-items-center">   
+  <h4 class="fw-bold py-2">
+    <span class="text-muted fw-light"></span>{{semester.academic_year}} - {{semester.name}} Semester
+   </h4>
+   <div class="d-flex justify-content-center align-items-center">
+    
+  </div>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+     
+        {% if semester %}
+           
+            <div class="col-xs-12">
+                <!-- Result Card -->
+                <div class="card mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">   
+                    <h5 class="mb-0">Score</h5>
+                   
+                       
+                  
+                    </div>
+                <div class="card-body">
+                    {% if scores %}
+                        {% include 'tables/student_score_table.html' with scores=scores %}
+                    {% else %}
+                        {% include 'card/nodata_small.html' %}
+                    {% endif %}
+                </div>
+            </div>
+            
+
+         
+
+            </div>
+        {% else %}
+            <div class="col-xs-12 mb-4 order-0">
+
+            {% include 'card/nodata.html' %}
+            </div>
+        {% endif %}
+  
+</div>
+    {% url 'catm' as catm_action %}
+    {% concat_all catm_action '?course=' course.id as action %}
+    {% include 'modal/form_modals.html' with modal_id="modalcatm" title="New CATM" form="catm_form" action=action lg_modal=True %}
+
+    {% url 'exam_mark' as exam_mark_action %}
+    {% concat_all exam_mark_action '?course=' course.id as exam_action %}
+    {% include 'modal/form_modals.html' with modal_id="modalexammark" title="Add Exam Score" form="exam_mark_form" action=exam_action  %}
+
+    {% url 'id_code_mapping' as code_mapping_action %}
+    {% concat_all code_mapping_action '?course=' course.id as mapping_action %}
+    {% include 'modal/form_modals.html' with modal_id="modalmarkmap" title="Add Code Student Mapping" form="mark_mappng_form" action=mapping_action  %}
+
+    {% endblock content %}
+
+{% block modal %}
+{% include 'modal/edit_form_modals.html' %}
+{% endblock modal %}
+
+

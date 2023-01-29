@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% load param_replace %}
+{% block title %}
+Academic Year | CUBAC
+{% endblock title %}
+
+{% block breadcrumb %}
+<div class="d-flex justify-content-between align-items-center">   
+  <h4 class="fw-bold py-2">
+    <span class="text-muted fw-light"></span>Academic Year - {{academic_year.name}}
+   </h4>
+   <div class="d-flex justify-content-center align-items-center">
+  
+  </div>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+    <div class="row">
+      <div class="col-lg-12 mb-4">
+        <div class="card">
+            
+              <div class="card-body searchable-list">
+                <div class="row mb-2">
+                  <div class="col-2">
+                    <input type="search" id="application-search" value="" class="search-div form-control" placeholder="Search">
+                  </div>
+                    <div class="col-10 d-flex">
+                    
+                    </div>
+                  </div>
+                  {% if semesters %}
+                  <div class="row"> 
+
+                    {% for semester in semesters %}
+                    <div class="col-xs-12 col-md-6">
+                      
+                      {% include 'card/semester.html' with semester=semester %}
+                    </div>
+                    {% endfor %}
+                    
+                  </div>
+                  {% include 'partials/pagination.html' with pagination=semesters %}
+
+                  {% else %}
+                  {% include 'card/nodata_small.html' %}
+                  {% endif %}
+                              
+          </div>
+        </div>
+        
+      </div>
+</div>
+{% include 'modal/form_modals.html' with modal_id="modalsemester" title="New Semester" form="semester_form" action_name="semester" %}
+{% include 'modal/edit_form_modals.html' %}
+    
+{% endblock content %}
+
+{% block modal %}
+
+{% endblock modal %}
+
+

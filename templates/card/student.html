@@ -1,0 +1,51 @@
+{% load static %}
+
+<div class="card  border border-light mb-2">
+    <div class="card-header bg-default" id="application{{forloop.counter}}e">
+      <div class="row" data-toggle="collapse" data-target="#collapseapplication{{forloop.counter}}" aria-expanded="true"
+        aria-controls="collapseapplication{{forloop.counter}}">
+       
+        <div class="col-10">
+               
+                <div class="d-flex align-items-center">
+                    
+
+                    <div class="flex-grow-1">
+                        <span class="fw-semibold d-block">{{student.full_name}}</span>
+                        <span class="font-weight-bold">ID: </span> {{student.student_id}} <br>
+                        <span class="font-weight-bold">Session: </span> {{student.session}} <br>
+                        <span class="font-weight-bold">Hall: </span> {{student.hall.name}} <br>
+
+                    </div>
+                </div>
+ 
+        </div>
+       
+        <div class="col-2 d-flex justify-content-end align-items-center gap-1">
+          <div class="dropdown">
+              <button class="btn p-0" type="button" id="application{{forloop.counter}}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="application{{forloop.counter}}">
+                <a href="{% url 'student_detail' student.student_id %}"  class="dropdown-item">
+                  <span class="">View</span>
+                </a>
+              
+                {% url 'edit_student' student.student_id as student_action %}
+                <a data-url="{{student_action}}"  data-bs-toggle="modal"
+                data-title="Edit Course" data-bs-target="#UpdateFormModal" class="dropdown-item">
+                <span class="">Edit</span>
+                </a>
+                <a href="{{student_action}}"  class="ajax-delete dropdown-item">
+                  <span class="">Delete</span>
+                   </a>
+              </div>
+            </div>
+            </div>
+
+        
+
+      </div>
+    </div>
+  </div>

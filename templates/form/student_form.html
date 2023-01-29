@@ -1,0 +1,47 @@
+{% load static %}
+<form action="{%if action %} {{action}} {% else %} {% url action_name %}{% endif %}" method="post" class="form">
+    {% csrf_token %}
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="full_name" class="form-label">Full Name</label>
+            <input class="form-control" type="text" name="full_name" id="full_name"
+                value="{{student.full_name|default:''}}" required/>
+        </div>
+         <div class="mb-3 col-md-6">
+            <label for="student_id" class="form-label">Student Id</label>
+            <input class="form-control" type="text" name="student_id" id="student_id"
+                value="{{student.student_id|default:''}}" required/>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="degree" class="form-label">degree</label>
+            <input class="form-control" type="text" name="degree" id="degree"
+                value="{{student.degree|default:'BSc'}}" required/>
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="session" class="form-label">Session</label>
+            <input class="form-control" type="text" name="session" id="session"
+                value="{{student.session|default:''}}" required/>
+        </div>
+          
+       
+        <div class="mb-3 col-md-6">
+            <label for="hall" class="form-label">Hall</label>
+                <select class="form-select" id="hall" name="hall" aria-label="Select Method" required>
+                    {% for hall in halls %}
+                    <option value="{{hall.id}}" {% if hall == student.hall %}selected{%endif %}>{{hall.name}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+             
+              
+
+    </div>
+    <div class="row help-text text-center text-danger">
+
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary me-2 ajax-submit">Save changes</button>
+
+    </div>
+</form>
+

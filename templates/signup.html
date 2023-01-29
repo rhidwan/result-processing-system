@@ -1,0 +1,175 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Signup |
+{% endblock title %}
+
+{% block navbar %}
+{% endblock navbar %}
+{% block header_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock header_css %}
+
+{% block body %}
+<body>
+  <div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+      <div class="authentication-inner">
+          <div class="authentication-wrapper authentication-basic container-p-y">
+            <div class="authentication-inner">
+              <!-- Register -->
+              <div class="card">
+                <div class="card-body">
+                  <!-- Logo -->
+                  <div class="app-brand justify-content-center">
+                    <a href="index.html" class="app-brand-link gap-2">
+                      <span class="app-brand-logo demo">
+                        <img class="img-fluid" src="{% static 'img/cu_logo.svg' %}" alt="">
+                      </span>
+                      <span class="app-brand-text demo text-body fw-bolder">Cucba</span>
+                    </a>
+                  </div>
+                  <!-- /Logo -->
+                  <h4 class="mb-2">Welcome Back 👋</h4>
+
+        
+                  <form id="formAuthentication" class="mb-3" action="{% url 'register' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div>
+                        {% if error %}
+                      
+                          {% for f, es in error.items %}
+                          {% for e in es %}
+                          <p class="text text-center text-danger">{{ f }} -{{ e }}</p>
+                          {% endfor %}
+                      {% endfor %}
+                      
+                        
+                              
+                        {% endif %}
+                      </div>
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autofocus
+                      />
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="name"
+                          name="full_name"
+                          placeholder="Enter your Full Name"
+                          autofocus
+                        />
+                      </div>
+
+                    <div class="mb-3 form-password-toggle">
+                      <div class="d-flex justify-content-between">
+                        <label class="form-label" for="password">Password</label>
+                      </div>
+                      <div class="input-group input-group-merge">
+                        <input
+                          type="password"
+                          id="password"
+                          class="form-control"
+                          name="password1"
+                          placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                          aria-describedby="password"
+                        />
+                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                      </div>
+                    </div>
+
+                    <div class="mb-3 form-password-toggle">
+                      <div class="d-flex justify-content-between">
+                        <label class="form-label" for="confirm_password"> Confirm Password</label>
+                       
+                      </div>
+                      <div class="input-group input-group-merge">
+                        <input
+                          type="password"
+                          id="confirm_password"
+                          class="form-control"
+                          name="password2"
+                          aria-describedby="password"
+                        />
+                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Date Of Birth</label>
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="dob"
+                          name="date_of_birth"
+                          placeholder="Enter your Birth Date"
+                          autofocus
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="gender1" value="0">
+                            <label class="form-check-label" for="gender0">Male</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="gender2" value="1">
+                            <label class="form-check-label" for="gender1">Female</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="gender3" value="2">
+                            <label class="form-check-label" for="gender3">Other</label>
+                          </div>
+                      </div>
+                 
+                    
+                    <div class="mb-3">
+                      <button class="btn btn-primary d-grid w-100" type="submit">Sign Up</button>
+                    </div>
+                  </form>
+        
+                  <p class="text-center">
+                    <span>Already Have an account?</span>
+                    <a href="{% url 'login' %}">
+                      <span>Login</span>
+                    </a>
+                  </p>
+                </div>
+              </div>
+              <!-- /Register -->
+            </div>
+          </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="{% static 'vendor/libs/jquery/jquery.js' %}"></script>
+  <script src="{% static 'vendor/libs/popper/popper.js' %}"></script>
+  <script src="{% static 'vendor/js/bootstrap.js' %}"></script>
+  <script src="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+
+  <script src="{% static 'vendor/js/menu.js' %}"></script>
+  <!-- endbuild -->
+
+  <!-- Vendors JS -->
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <!-- Main JS -->
+</body>
+
+
+{% endblock body %}
+

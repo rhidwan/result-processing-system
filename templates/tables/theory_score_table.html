@@ -1,0 +1,76 @@
+{% load static %}
+<div class="table-responsive text-nowrap" >
+    <table class="table card-table table-hover" id="catm-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Attd.</th>
+          <th>Ct 1</th>
+          <th>Ct 2</th>
+          <th>Ct 3</th>
+          <th>CATM</th>
+          <th>Section A</th>
+          <th>Section B</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody class="table-border-bottom-0">
+        {% for score in scores %}
+        <tr>
+          <td>{{score.catm.student.student_id}}</td>
+          <td>{{score.catm.attendance}}</td>
+          <td>{{score.catm.ct_1}}</td>
+          <td>{{score.catm.ct_2}}</td>
+          <td>{{score.catm.ct_3}}</td>
+          <td>{{score.catm.total}}</td>
+          <td>{{score.section_a.marks}}</td>
+          <td>{{score.section_b.marks}}</td>
+
+          <td>
+            <div class="dropdown">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+             
+            </div>
+          </td>
+        </tr>
+       {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+  <link rel="stylesheet" href="{% static 'vendor/datatables/dataTables.bootstrap5.min.css' %}">
+
+
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap5.min.js' %}"></script>
+
+
+  {% if split_search == True  %}
+  <script>
+$(document).ready(function () {
+    var table = $('#catm-table').DataTable({ 
+          paging: false,
+            info:false
+          });
+
+    $('#table-search').keyup(function () {
+        table.search($(this).val()).draw();
+    });
+});
+  </script>
+  
+{% else %}
+
+<script>
+ 
+  $(document).ready(function () {
+    $('#payment-table').DataTable({
+      paging: false,
+        info:false
+    });
+  });
+</script>
+
+{% endif %}
