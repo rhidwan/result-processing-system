@@ -29,27 +29,27 @@
                 <!-- Result Card -->
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">   
-                    <h5 class="mb-0">Score</h5>
-                   
-                      
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                        data-bs-target="#modalcatm">
-                        <i class="bx bx-list-plus d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Add CATM</span>
-                    </button>
+                        <h5 class="mb-0">Score</h5>
+                    
+                        
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#modalcatm">
+                            <i class="bx bx-list-plus d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Add CATM</span>
+                        </button>
                        
                   
+                    </div>
+                    <div class="card-body">
+                        {% if scores %}
+                        
+                                {% include 'tables/theory_score_table.html' with scores=scores %}
+                    
+                        {% else %}
+                            {% include 'card/nodata_small.html' %}
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card-body">
-                    {% if scores %}
-                       
-                               {% include 'tables/theory_score_table.html' with scores=scores %}
-                 
-                    {% else %}
-                        {% include 'card/nodata_small.html' %}
-                    {% endif %}
-                </div>
-            </div>
             
             </div>
             
@@ -57,32 +57,22 @@
                 <!-- Result Card -->
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">   
-                    <h5 class="mb-0">Score</h5>
-                    <div>
+                        <h5 class="mb-0">Unallocated Marks</h5>
+                        <div>
+                            <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
+                            data-bs-target="#modalexammark">
+                            <i class="bx bx-list-plus d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Add Exam Mark</span>
+                            </button>
 
-                        <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
-                        data-bs-target="#modalexammark">
-                        <i class="bx bx-list-plus d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Add Exam Mark</span>
-                        </button>
-
-                        <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
-                        data-bs-target="#modalmarkmap">
-                        <i class="bx bx-list-plus d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Add Map</span>
-                        </button>
-
-                        
-
+                            <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
+                            data-bs-target="#modalmarkmap">
+                            <i class="bx bx-list-plus d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Add Map</span>
+                            </button>                       
+                        </div>  
                     </div>
-                  
-                </button>
-                   
-                      
-                       
-                  
-                </div>
-                <div class="card-body">
+                    <div class="card-body">
                     
                     {% if exam_marks %}
                         {% regroup exam_marks by section as sections %}
@@ -111,8 +101,8 @@
                     {% else %}
                         {% include 'card/nodata_small.html' %}
                     {% endif %}
+                    </div>
                 </div>
-            </div>
             
             </div>
             {% else %}
@@ -120,28 +110,27 @@
                 <!-- Result Card -->
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">   
-                    <h5 class="mb-0">Score</h5>
-                    <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
-                        data-bs-target="#modalnontheorymark">
-                        <i class="bx bx-list-plus d-block d-sm-none"></i>
-                        <span class="d-none d-sm-block">Add Mark</span>
-                        </button>
+                        <h5 class="mb-0">Score</h5>
+                        <button type="button" class="btn btn-outline-primary mx-1" data-bs-toggle="modal"
+                            data-bs-target="#modalnontheorymark">
+                            <i class="bx bx-list-plus d-block d-sm-none"></i>
+                            <span class="d-none d-sm-block">Add Mark</span>
+                            </button>
+                    </div>
+                    <div class="card-body">
+                        
+                        {% if scores %}
+                        
+                            {% include 'tables/non_theory_score_table.html' with scores=scores %}
+        
+                        {% else %}
+                            {% include 'card/nodata_small.html' %}
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="card-body">
-                    
-                    {% if scores %}
-                       
-                        {% include 'tables/non_theory_score_table.html' with scores=scores %}
-      
-                    {% else %}
-                        {% include 'card/nodata_small.html' %}
-                    {% endif %}
-                </div>
-            </div>
-            
             </div>
             {% endif %}
-            </div>
+            
         {% else %}
             <div class="col-xs-12 mb-4 order-0">
 
@@ -171,11 +160,13 @@
     {% include 'modal/form_modals.html' with modal_id="modalnontheorymark" title="Add Mark" form="non_theory_mark_form" action=non_theory_action  %}
     
     {% endif %}
+    {% include 'modal/edit_form_modals.html' %}
+    {% include 'modal/course_score_view_modal.html' %}
     
-    {% endblock content %}
+{% endblock content %}
 
 {% block modal %}
-{% include 'modal/edit_form_modals.html' %}
+<!-- {% include 'modal/edit_form_modals.html' %} -->
 {% endblock modal %}
 
 

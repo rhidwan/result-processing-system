@@ -7,3 +7,9 @@ class StudentForm(forms.ModelForm):
         model = Student
         exclude = ('id',)
 
+class HallForm(forms.ModelForm):
+    class Meta:
+        model = Hall
+        exclude = ('id',)
+
+

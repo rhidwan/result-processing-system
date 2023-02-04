@@ -13,12 +13,16 @@ def update_score(sender, instance, **kwargs):
         
         instance.final_exam_mark = section_a + section_b
         instance.mark_obtained = catm + section_a + section_b
-    
+
     if instance.mark_obtained:
-        percentage = (instance.mark_obtained/(instance.course.credit_point*25)) *100
+        ccp = instance.course.credit_point
+        percentage = (instance.mark_obtained/(ccp *25)) *100
         instance.percentage = percentage
-        instance.letter_grade, instance.grade_point = get_letter_grade_point(percentage)
-        
+        letter_grade, grade_point = get_letter_grade_point(percentage)
+        instance.credit_point = ccp * grade_point
+        instance.letter_grade = letter_grade
+        instance.grade_point = grade_point
+         
     print(sender, instance, "Signal Fired")
 
 @receiver(pre_save, sender=Catm)

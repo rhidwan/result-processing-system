@@ -1,0 +1,118 @@
+{% load static %}
+<div class="container">
+
+        <dl class="row">
+            <dt class="col-3">Name</dt>
+            <dd class="col-9">{{score.student.full_name}}</dd>
+        
+            <dt class="col-3">Student Id</dt>
+            <dd class="col-9">{{score.student.student_id}}</dd>
+        
+
+        </dl>
+        
+        <div class="row mb-2" >
+            <div class="card shadow-sm">
+           
+                <div class="card-body">
+        
+                    <h6>Final Exam Mark</h6>
+        
+                    <dl class="row">
+                        <dt>Section A</dt>
+                        <dd >
+                            <div class="row">
+                                {% if score.section_a %}
+                                <div class="col-10">
+                                    <p>Marks: {{score.section_a.marks}} <br> Code No: {{score.section_a.code_no}}</p>
+        
+                                </div>
+                                
+                                <div class="col-2"><a href="{% url 'remove_section_from_score' score.id 'a' %}" class="ajax-delete btn btn-outline-secondary"><i class="bx bx-trash"></i></a></div>
+                                {% else %}
+                                <p>Not Available yet</p>
+                                {% endif %}
+                            </div>
+            
+                        </dd>
+                        
+                        <dt >Section B</dt>
+                        <dd>
+                            <div class="row">
+                                {% if score.section_b %}
+                                <div class="col-10">
+                                    <p>Marks: {{score.section_b.marks}} <br>Code No: {{score.section_b.code_no}} </p>
+                                </div>
+                                <div class="col-2"><a href="{% url 'remove_section_from_score' score.id 'b' %}" class="ajax-delete btn btn-outline-secondary"><i class="bx bx-trash"></i></a></div>
+                                {% else %}
+                                <p>Not Available yet</p>
+                                {% endif %}
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
+                   
+        
+        
+        
+                </div>
+        </div>
+
+        <div class="row">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6>Catm</h6>
+                    {% if score.catm %}
+                        <form action="{% url 'edit_catm' score.catm.id %}" method="post" class="form">
+
+                        <div class="row">
+                                {% csrf_token %}
+                                
+                                <div class="mb-3 col-6">
+                                    <label for="attendance" class="form-label">Attendance</label>
+                                    <input class = "form-control" name="attendance" type = "number" 
+                                    placeholder = "Attendance" required = "required" value="{{score.catm.attendance}}"/>
+                                </div>
+                                <div class="mb-3 col-6">
+                                    <label for="ct_1" class="form-label">CT 1</label>
+
+                                    <input class = "form-control" name="ct_1" type = "number" 
+                                    placeholder = "CT 1" required = "required" value="{{score.catm.ct_1}}"/>
+                                </div>
+                                <div class="mb-3 col-6">
+                                    <label for="ct_2" class="form-label">CT 2</label>
+                                    
+                                    <input class = "form-control" name="ct_2" type = "number" 
+                                    placeholder = "CT 2" required = "required" value="{{score.catm.ct_2}}"/>
+                                </div>
+                                <div class="mb-3 col-6">
+                                    <label for="ct_3" class="form-label">CT 3</label>
+
+                                    <input class = "form-control" name="ct_3" type = "number" 
+                                    placeholder = "CT 3" required = "required" value="{{score.catm.ct_3}}"/>
+                                </div>
+                            
+                                    <div class="row help-text text-center text-danger">
+                            
+                                    </div>
+                                    <div class="mt-2">
+                                    <button type="submit" class="btn btn-primary me-2 ajax-submit">Save changes</button>
+                            
+                                    </div>
+                                
+                
+                        </div>
+                    </form>
+                    {% else %}
+                        {% include 'card/nodata_small.html' %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+</div>
+
+
+
+<script src="{% static 'js/perform_delete.js' %}"></script>

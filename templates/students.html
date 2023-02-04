@@ -37,15 +37,15 @@ Students | CUBAC
                   </div>
                     <div class="col-10 d-flex">
                       <div class="dropdown me-2">
-                        {% regroup applications by call_for_application as seasons %}
+
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Season: {% if filters.season %}{% for group in seasons %} {% if group.grouper.id|stringformat:"s" == filters.season %}{{group.grouper.title}} {%endif%}  {% endfor %} {% endif %}
+                          Session: {% if filters.session %}{% for session in sessions %} {% if session == filters.session %} {{session}} {%endif%}  {% endfor %} {% endif %}
                         </button>
                         <ul class="dropdown-menu  dropdown-menu-end">
-                          <li><a class="dropdown-item {% if not filters.season %}active{% endif %} " href="?{% param_replace season=''  %}">All</a></li>
+                          <li><a class="dropdown-item {% if not filters.session %}active{% endif %} " href="?{% param_replace session=''  %}">All</a></li>
                           
-                          {% for group in seasons %}
-                              <li><a class="dropdown-item {% if group.grouper.id|stringformat:'s' == filters.season %}active{% endif %}" href="?{% param_replace season=group.grouper.id  %}">{{ group.grouper.title }}</a></li>
+                          {% for session in sessions %}
+                              <li><a class="dropdown-item {% if session == filters.session %}active{% endif %}" href="?{% param_replace session=session  %}">{{ session }}</a></li>
                           {% endfor %}
                         </ul>
                         
@@ -53,14 +53,16 @@ Students | CUBAC
 
                       <div class="dropdown me-2">
 
+                        {% regroup students by hall as halls %}
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Status : {{filters.status|default:''}}
+                          Hall: {% if filters.hall %}{% for group in halls %} {% if group.grouper.id|stringformat:'s'  == filters.hall %} {{group.grouper.name}} {%endif%}  {% endfor %} {% endif %}
                         </button>
-
                         <ul class="dropdown-menu  dropdown-menu-end">
-                          <li><a class="dropdown-item {% if not filters.status %}active{% endif %} " href="?{% param_replace status=''  %}">All</a></li>
-                          <li><a class="dropdown-item {% if filters.status == 'approved' %}active{% endif %} " href="?{% param_replace status='approved' %}">Approved</a></li>
-                          <li><a class="dropdown-item {% if filters.status == 'pending' %}active{% endif %} " href="?{% param_replace status='pending' %}">Pending</a></li>
+                          <li><a class="dropdown-item {% if not filters.hall %}active{% endif %} " href="?{% param_replace hall=''  %}">All</a></li>
+                          
+                          {% for group in halls %}
+                              <li><a class="dropdown-item {% if group.grouper.id|stringformat:'s'  == filters.hall %}active{% endif %}" href="?{% param_replace hall=group.grouper.id  %}">{{ group.grouper.name }}</a></li>
+                          {% endfor %}
                         </ul>
 
                       </div>
@@ -88,7 +90,7 @@ Students | CUBAC
         </div>
         
       </div>
-
+      </div>
       {% include 'modal/form_modals.html' with modal_id="modalstudent" title="New student" form="student_form" action_name="student" halls=halls %}
       {% include 'modal/edit_form_modals.html' %}
 {% endblock content %}

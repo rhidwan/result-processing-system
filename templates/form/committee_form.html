@@ -36,8 +36,14 @@
                   {% endfor %}
                 </select>
                 </div>
-
-
+            <div class="mb-3 col-md-6">
+                <label for="tabulator" class="form-label">Tabulator</label>
+                    <select class="form-select" id="tabulator" name="tabulator" aria-label="Select Method" required multiple>
+                        {% for teacher in teachers %}
+                        <option value="{{teacher.id}}"{% if teacher in committee.tabulator.all %}selected{% endif %} >{{teacher.full_name}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
     </div>
     <div class="row help-text text-center text-danger">
 

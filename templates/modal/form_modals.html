@@ -42,7 +42,11 @@
 
                     {% elif form == "update_user_info" %}
                         {% include 'form/user_update_form.html' %}
+                    
+                    {% elif form == "hall_form" %}
+                        {% include 'form/hall_form.html' with hall=hall action_name=action_name %}
 
+                        
                     {% endif %}
                 </div>
           

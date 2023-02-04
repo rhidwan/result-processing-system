@@ -11,13 +11,15 @@
           <th>CATM</th>
           <th>Section A</th>
           <th>Section B</th>
-          <th>Action</th>
+
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
         {% for score in scores %}
         <tr>
-          <td>{{score.catm.student.student_id}}</td>
+          <td><a href="#" data-url="{% url 'student_course_details' score.catm.student.student_id score.course.id %}" aria-labelledby="studentscore{{forloop.counter}}" data-bs-toggle="modal"
+            data-title="Score Details" data-bs-target="#ScoreViewModal"> {{score.catm.student.student_id}} </a> 
+          </td>
           <td>{{score.catm.attendance}}</td>
           <td>{{score.catm.ct_1}}</td>
           <td>{{score.catm.ct_2}}</td>
@@ -26,14 +28,7 @@
           <td>{{score.section_a.marks}}</td>
           <td>{{score.section_b.marks}}</td>
 
-          <td>
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                <i class="bx bx-dots-vertical-rounded"></i>
-              </button>
-             
-            </div>
-          </td>
+         
         </tr>
        {% endfor %}
 

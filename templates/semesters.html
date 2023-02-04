@@ -37,33 +37,21 @@ Semesters | CUBAC
                   </div>
                     <div class="col-10 d-flex">
                       <div class="dropdown me-2">
-                        {% regroup applications by call_for_application as seasons %}
+
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Season: {% if filters.season %}{% for group in seasons %} {% if group.grouper.id|stringformat:"s" == filters.season %}{{group.grouper.title}} {%endif%}  {% endfor %} {% endif %}
+                          Academic Year: {% if filters.academic_year %}{% for academic_year in academic_years %} {% if academic_year.id|stringformat:"s" == filters.academic_year %}{{academic_year.name}} {%endif%}  {% endfor %} {% endif %}
                         </button>
                         <ul class="dropdown-menu  dropdown-menu-end">
-                          <li><a class="dropdown-item {% if not filters.season %}active{% endif %} " href="?{% param_replace season=''  %}">All</a></li>
+                          <li><a class="dropdown-item {% if not filters.academic_year %}active{% endif %} " href="?{% param_replace academic_year=''  %}">All</a></li>
                           
-                          {% for group in seasons %}
-                              <li><a class="dropdown-item {% if group.grouper.id|stringformat:'s' == filters.season %}active{% endif %}" href="?{% param_replace season=group.grouper.id  %}">{{ group.grouper.title }}</a></li>
+                          {% for academic_year in academic_years %}
+                              <li><a class="dropdown-item {% if academic_year.id|stringformat:'s' == filters.academic_year %}active{% endif %}" href="?{% param_replace academic_year=academic_year.id  %}">{{ academic_year.name }}</a></li>
                           {% endfor %}
                         </ul>
                         
                       </div>
 
-                      <div class="dropdown me-2">
-
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Status : {{filters.status|default:''}}
-                        </button>
-
-                        <ul class="dropdown-menu  dropdown-menu-end">
-                          <li><a class="dropdown-item {% if not filters.status %}active{% endif %} " href="?{% param_replace status=''  %}">All</a></li>
-                          <li><a class="dropdown-item {% if filters.status == 'approved' %}active{% endif %} " href="?{% param_replace status='approved' %}">Approved</a></li>
-                          <li><a class="dropdown-item {% if filters.status == 'pending' %}active{% endif %} " href="?{% param_replace status='pending' %}">Pending</a></li>
-                        </ul>
-
-                      </div>
+                      
                     </div>
                  
                   </div>

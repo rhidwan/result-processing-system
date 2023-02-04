@@ -14,17 +14,18 @@
       <tbody class="table-border-bottom-0">
         {% for exam_mark in exam_marks %}
         <tr>
-        <td>{{forloop.counter}}</td>
+          <td>{{forloop.counter}}</td>
           <td>{{exam_mark.code_no}}</td>
           <td>{{exam_mark.marks}}</td>
-  
+    
           <td>
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                <i class="bx bx-dots-vertical-rounded"></i>
-              </button>
-             
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+              <a data-url="{% url 'edit_exam_mark' exam_mark.id %}" aria-labelledby="exammark{{forloop.counter}}" data-bs-toggle="modal"
+              data-title="Edit Exam Mark " data-bs-target="#UpdateFormModal" class="me-1 btn btn-link btn-sm btn-outline-secondary"><i class="bx bx-edit"></i></a>
+            <a href="{% url 'edit_exam_mark' exam_mark.id %}"  class="btn btn-sm btn-link btn-outline-danger ajax-delete "><i class="bx bx-trash"></i></a>
+           
             </div>
+              
           </td>
         </tr>
        {% endfor %}

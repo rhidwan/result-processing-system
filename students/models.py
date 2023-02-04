@@ -18,6 +18,8 @@ class Student(models.Model):
     session = models.CharField(max_length=50, null=False, blank=False)
     hall= models.ForeignKey(Hall, on_delete=models.SET_NULL, blank=True, null=True )
     
+    class Meta:
+        ordering = ('student_id', 'session')
     
 
 

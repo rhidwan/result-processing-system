@@ -11,18 +11,43 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 # Create your views here.
 def exam_committee(request):
     if request.method == "GET":
     #list
-        committies = ExamCommittee.objects.all()
+        academic_year = request.GET.get('academic_year', None)
+        semester = request.GET.get('semester', None)
+
+        print(academic_year, semester)
+        query = Q()
+        if academic_year:
+            query &= Q(academic_year=academic_year)
+        if semester:
+            query &= Q(semester=semester)
+        
+        committee_list = ExamCommittee.objects.filter(query).prefetch_related('academic_year', 'semester', 'member', 'chairman', 'tabulator')
+
+
+        page = request.GET.get('page', 1)
+        paginator = Paginator(committee_list, 10)
+
+        try:
+            committies = paginator.page(page)
+        except PageNotAnInteger:
+            committies = paginator.page(1)
+        except EmptyPage:
+            committies = paginator.page(paginator.num_pages)
+
+
         teachers = User.objects.all()
         semesters = Semester.objects.all()
         academic_years = AcademicYear.objects.all()
-        print(academic_years)
-        return render(request, "committee.html", {"committies": committies, "teachers": teachers, "semesters": semesters, 'academic_years': academic_years})
+
+        return render(request, "committee.html", {"committies": committies, "teachers": teachers, "semesters": semesters, 'academic_years': academic_years, "filters": {"academic_year": academic_year, "semester": semester}})
     
     elif request.method == "POST":
         print(request.POST)
@@ -100,13 +125,37 @@ def exam_committe_detail(request, pk):
 def course(request):
     if request.method == "GET":
     #list
-        courses = Course.objects.all()
+        
+        academic_year = request.GET.get('academic_year', None)
+        semester = request.GET.get('semester', None)
+
+        # print(academic_year, semester)
+        query = Q()
+        if academic_year:
+            query &= Q(semester__academic_year=academic_year)
+        if semester:
+            query &= Q(semester=semester)
+        
+        course_list = Course.objects.filter(query).prefetch_related('teacher', 'examiner', 'semester')
+
+
+        page = request.GET.get('page', 1)
+        paginator = Paginator(course_list, 10)
+
+        try:
+            courses = paginator.page(page)
+        except PageNotAnInteger:
+            courses = paginator.page(1)
+        except EmptyPage:
+            courses = paginator.page(paginator.num_pages)
+
+
         teachers = User.objects.all()
         semesters = Semester.objects.all()
         academic_years = AcademicYear.objects.all()
 
-
-        return render(request, "course.html", {"courses": courses, "teachers": teachers, "semesters": semesters, 'academic_years': academic_years})
+        
+        return render(request, "course.html", {"courses": courses, "teachers": teachers, "semesters": semesters, 'academic_years': academic_years, "filters": {"academic_year": academic_year, "semester": semester}})
     
     elif request.method == "POST":
         print(request.POST)
@@ -128,9 +177,15 @@ def course(request):
 def course_details(request, pk):
     course = get_object_or_404(Course, id=pk)
     scores = Score.objects.filter(course=course).prefetch_related('catm', 'catm__student')
-    exam_marks = ExamMark.objects.filter(course=course)
+    exam_marks = ExamMark.objects.filter(course=course, is_allocated=False).order_by('section')
     return render(request, 'course_details.html', {"course": course, "scores": scores, "exam_marks": exam_marks})
 
+def student_course_details(request, student_id, course):
+    if request.method == "GET":
+        # course = get_object_or_404(Course, id=course)
+        score = get_object_or_404(Score, catm__student__student_id=student_id, course__id=course)
+
+        return render(request, 'student_course_details.html', {"score": score} )
 
 @login_required()
 def edit_course(request, pk):
@@ -180,11 +235,31 @@ def semester(request):
         semesters = Semester.objects.all()
         academic_years = AcademicYear.objects.all()
 
+
+        academic_year = request.GET.get('academic_year', None)
+
+        query = Q()
+        if academic_year:
+            query &= Q(academic_year=academic_year)
+        
+        semesters_list = Semester.objects.filter(query)
+        page = request.GET.get('page', 1)
+        paginator = Paginator(semesters_list, 10)
+        
+
+        try:
+            semesters = paginator.page(page)
+        except PageNotAnInteger:
+            semesters = paginator.page(1)
+        except EmptyPage:
+            semesters = paginator.page(paginator.num_pages)
+
+
         return render(request, 'semesters.html', {
             "semesters": semesters,
             "semester_options": ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'],
             'academic_years': academic_years,
-            
+            "filters": {'academic_year': academic_year}
             })
 
     elif request.method == "POST":

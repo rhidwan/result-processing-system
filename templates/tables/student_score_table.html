@@ -32,9 +32,9 @@
 
           <td>
             <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                <i class="bx bx-dots-vertical-rounded"></i>
-              </button>
+              <div>
+                <a href="{% url 'generate_grade_sheet' semester.id student.student_id %}" class="btn btn-outline-primary"> <i class="bx bx-download"></i></a>
+            </div>
              
             </div>
           </td>

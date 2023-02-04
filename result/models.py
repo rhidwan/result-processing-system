@@ -25,6 +25,7 @@ class ExamMark(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=False, null=False)
     code_no = models.CharField(max_length=50, blank=False, null=False)
     section = models.CharField(max_length=2, choices=SECTION_CHOICE, null=False, blank=False)
+    is_allocated = models.BooleanField(default=False)
     marks = models.FloatField()
 
     class Meta:
@@ -50,7 +51,7 @@ class Score(models.Model):
     percentage = models.FloatField(blank=True, null=True) # mo/25*CR *100
     letter_grade = models.CharField(max_length=4, null=True, blank=True, default='I')
     grade_point = models.FloatField(blank=True, null=True, default=0)
-    # credit_point = models.FloatField(blank=True, null=True) #credit * grade point
+    credit_point = models.FloatField(blank=True, null=True) #credit * grade point
     approved_by = models.ManyToManyField(User, related_name="approved_by")
 
     class Meta:

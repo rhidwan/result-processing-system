@@ -1,15 +1,18 @@
 from itertools import groupby
-from django.http import HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from rest_framework import status
 from committee.models import AcademicYear, Course, ExamCommittee, Semester
+from result.forms import ExamMarkForm, CatmForm
 from result.models import Catm, ExamMark, Score
 from django.contrib import messages
 from result.utils import render_to_pdf
+from django.contrib.auth.decorators import login_required
 
 from students.models import Student
 
-# Create your views here.
+
 def catm(request):
     course = request.GET.get('course', None)
     if not course:
@@ -158,19 +161,95 @@ def exam_mark(request):
             exam_mark, created = ExamMark.objects.get_or_create(section=section,code_no=code_no, marks=mark, course=course)
             exam_mark.save()
 
-
-
         messages.success(request, "Successfully Updated Exam Mark")
-        return JsonResponse({"status": "success", "msg": "done"}, status=201)
-    if request.method == "DELETE":
-        exam_mark = get_object_or_404(ExamMark, id=course)
-        # seat.application_set.all().update(seat=None)
-        exam_mark.delete()
-        messages.success(request, "Successfully Deleted Exam Mark")
         return JsonResponse({"status": "success", "msg": "done"}, status=201)
 
     messages.success(request, "Failed to Update Exam Mark")
     return JsonResponse({"status": "error", "msg": "Something is Wrong"}, status=201)
+
+
+@login_required()
+def edit_exam_mark(request, pk):
+    exam_mark = get_object_or_404(ExamMark, id=pk)
+    if request.method == "GET":
+        return render(request, 'form/single_exam_mark_form.html', {
+            "action": reverse('edit_exam_mark', args=[pk]),
+            "exam_mark": exam_mark,
+        })
+    
+    if request.method == "POST":
+        form = ExamMarkForm(request.POST, instance=exam_mark)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully Updated")
+            return JsonResponse({"status": "success", "msg": "Done."}, status=201)
+
+        else:
+            messages.error(request, "Failed To Update Exam Mark")
+            err_msg = ""
+            for field, errors in form.errors.items():
+                for error in errors:
+                    err_msg += "\n{} - {}".format(field, error)
+            return JsonResponse({"status":"error", "msg": err_msg}, status=200)
+    
+    if request.method == "DELETE":
+        try:
+            exam_mark.delete()
+            messages.success(request, "Successfully Deleted")
+            return JsonResponse({"status": "success", "msg": "Done."}, status=200)
+        except Exception as e:
+            print(e)
+            messages.error(request, "Failed To Update Exam mark")
+            return JsonResponse({"status":"error", "msg": "Failed To delete"}, status=200)
+
+@login_required()
+def edit_catm(request, pk):
+    catm = get_object_or_404(Catm, id=pk)
+    
+    if request.method == "POST":
+        form = CatmForm(request.POST, instance=catm)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Successfully Updated")
+            return JsonResponse({"status": "success", "msg": "Done."}, status=201)
+
+        else:
+            messages.error(request, "Failed To Update Catm")
+            err_msg = ""
+            for field, errors in form.errors.items():
+                for error in errors:
+                    err_msg += "\n{} - {}".format(field, error)
+            return JsonResponse({"status":"error", "msg": err_msg}, status=200)
+
+def remove_section_from_score(request, pk, section):
+    score = get_object_or_404(Score, id=pk)
+
+    if request.method == "DELETE":
+        
+        try:
+            if section == 'a':
+                section = score.section_a
+                score.section_a = None
+                score.save()
+
+            elif section == 'b':
+                section = score.section_b
+                score.section_b = None
+                score.save()
+            else:
+                return Http404
+            section.is_allocated = False
+            section.save()
+
+            messages.success(request, "Successfully Removed")
+            return JsonResponse({"status": "success", "msg": "Done."}, status=200)
+        except Exception as e:
+            print(e)
+            messages.error(request, "Failed To Update Score")
+            return JsonResponse({"status":"error", "msg": "Failed To delete"}, status=200)
+
+
+
 
 def id_code_mapping(request):
     course = request.GET.get('course', None)
@@ -213,7 +292,10 @@ def id_code_mapping(request):
             elif section == "B":
                 score.section_b = exam_mark
             
+            exam_mark.is_allocated = True
+            exam_mark.save()
             score.save()
+            
             
         messages.success(request, "Successfully Updated")
         return JsonResponse({"status": "success", "msg": "done"}, status=201)
@@ -272,3 +354,46 @@ def generate_grade_sheet(request, semester, student_id):
             response['Content-Disposition'] = content
             return response
         return HttpResponse("Not found")
+
+
+def generate_tabulation_sheet(request, semester):
+    try:   
+        semester = Semester.objects.filter(id=semester).prefetch_related('course_set', 'exam_committee')[0]
+    except Exception as e:
+        print(e)
+        raise Http404
+    
+    try:
+        committee = semester.exam_committee.all()[0]
+    except:
+        committee = None
+        
+    scores = Score.objects.filter(course__semester=semester).prefetch_related('student', 'catm', 'course', 'section_a', 'section_b').order_by('student__student_id', 'course__course_code')
+   
+    scores_dict = {}
+
+    for student, group in groupby(scores, lambda x: x.student):
+        scores_dict[student] = {}
+        for course, inner_group in groupby(group, lambda x: x.course):
+            scores_dict[student][course.course_code] = list(inner_group)
+
+    context = {
+        "semester": semester, 
+        "scores": scores_dict,
+        "committee": committee
+    }
+
+
+     # html = template.render(context)
+    pdf = render_to_pdf(request, 'pdf/tabulation_sheet.html' , context)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "tabulation_sheet_%s.pdf" %( semester.name)
+        # content = "inline; filename='%s'" %(filename)
+        # download = request.GET.get("download")
+        # if download:
+        content = "attachment; filename=%s" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
+    

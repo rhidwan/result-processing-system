@@ -1,0 +1,441 @@
+{% load static %}
+{% load calculate_total %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style type="text/css" media="all">
+        @page {
+            size: A4 landscape;
+            /* can use also 'landscape' for orientation */
+            margin: 0.2in 0.2in 0.2in 0.2in;
+        }
+        
+
+        @media print {
+            * {
+                text-shadow: none !important;
+                color: #000 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                font-size: x-small !important;
+            }
+            html, body {
+            border: 1px solid white;
+            height: 99%;
+            page-break-after: avoid;
+            page-break-before: avoid;
+        }       
+
+            .small-text,
+            .small-text td,
+            .small-text th,
+            .small-text img,
+            .small-text p,
+            .small-text sub {
+                font-size: xx-small !important;
+            }
+
+            .small-text table {
+                border-collapse: collapse !important;
+                width: min-content !important;
+                height: min-content !important;
+            }
+
+            table th,
+            table td,
+            .small-text p {
+                padding: 0px !important;
+            }
+
+        }
+
+        .table-bordered td {
+            border: 2px solid!important ;
+        }
+
+        .align-bottom {
+            display: flex;
+            /* defines flexbox */
+            align-items: flex-end;
+            justify-content: flex-end;
+            align-content: flex-end;
+        }
+
+        .vertical-text {
+
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            width: 1.5em;
+        }
+        .vertical-text div {
+            -moz-transform: rotate(90.0deg);  /* FF3.5+ */
+            -o-transform: rotate(90.0deg);  /* Opera 10.5 */
+            -webkit-transform: rotate(90.0deg);  /* Saf3.1+, Chrome */
+            transform: rotate(90deg);
+            filter:  progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083);  /* IE6,IE7 */
+            -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)"; /* IE8 */
+            margin-left: -10em;
+            margin-right: -10em;
+        }
+        
+    </style>
+    <link rel="stylesheet" href="{% static 'vendor/css/core.css' %}" />
+
+</head>
+
+<body class="bg-white text-dark">
+    {% with semester.course_set.all as courses %}
+    {% chunks scores.keys 4 as slice_lists %}
+        {% for students in slice_lists %}
+        <div class="container">
+            <div class="row">
+                <div class="col-2 small-text">
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                            <tr style="font-weight:bold;">
+                                <td colspan="3"> Grading System</td>
+                            </tr>
+                            <tr style="text-align:center;font-weight:bold;">
+                                <td scope="col" class="col-8">Numerical Grade</td>
+                                <td scope="col" class="col-2">Letter Grade</td>
+                                <td scope="col" class="col-2">Grade Point</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>80% or above</td>
+                                <td>A+</td>
+                                <td>4.00</td>
+                            </tr>
+                            <tr>
+                                <td>75% to less than 80%</td>
+                                <td>A</td>
+                                <td>3.75</td>
+                            </tr>
+                            <tr>
+                                <td>70% to less than 75%</td>
+                                <td>A-</td>
+                                <td>3.50</td>
+                            </tr>
+                            <tr>
+                                <td>65% to less than 70%</td>
+                                <td>B+</td>
+                                <td>3.25</td>
+                            </tr>
+                            <tr>
+                                <td>60% to less than 65%</td>
+                                <td>B</td>
+                                <td>3.00</td>
+                            </tr>
+                            <tr>
+                                <td>55% to less than 60%</td>
+                                <td>B-</td>
+                                <td>2.75</td>
+                            </tr>
+                            <tr>
+                                <td>50% to less than 55%</td>
+                                <td>C+</td>
+                                <td>2.50</td>
+                            </tr>
+                            <tr>
+                                <td>45% to less than 50%</td>
+                                <td>C</td>
+                                <td>2.25</td>
+                            </tr>
+                            <tr>
+                                <td>40% to less than 45%</td>
+                                <td>D</td>
+                                <td>2.00</td>
+                            </tr>
+                            <tr>
+                                <td>Less than 40%</td>
+                                <td>F</td>
+                                <td>0.00</td>
+                            </tr>
+                            <tr>
+                                <td>Incompetent or Absent</td>
+                                <td>I</td>
+                                <td>0.00</td>
+                            </tr>
+                            <tr style="font-weight:bold;">
+                                <td colspan="3">Minimum GPA for passing: 2.20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+    
+                </div>
+                <div class="col-2 small-text">
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                            <tr style="font-weight:bold;">
+                                <td>Abbreviation Used</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CATM = Class. Att. & Class Test</td>
+                            </tr>
+                            <tr>
+                                <td>FEM = Final Exam Mark</td>
+                            </tr>
+                            <tr>
+                                <td>MO = Mark Obtained</td>
+                            </tr>
+                            <tr>
+                                <td>LG = LetterGrade</td>
+                            </tr>
+                            <tr>
+                                <td>GP = Grade Point</td>
+                            </tr>
+                            <tr>
+                                <td>CP = Credit Points Credits = GP </td>
+                            </tr>
+                            <tr>
+                                <td>TCE = Total Credit Erned</td>
+                            </tr>
+                            <tr>
+                                <td>TCP= Total Credit Points </td>
+                            </tr>
+                            <tr>
+                                <td>TCO = Total Credit Offered</td>
+                            </tr>
+                             <tr>
+                                <td>GPA = Grade Point Average: TCP/TCO </td>
+                            </tr>
+                           
+                        </tbody>
+                    </table>
+                    
+                </div>
+    
+                <div class="col-4 small-text text-center">
+                    <img style="height: 50px; width:50px;" class="img-fluid" src="{% static 'img/cu_logo.svg' %}" alt="">
+    
+                    <h3>
+                        <strong> UNIVERSITY OF CHITTAGONG </strong><br>CHITTAGONG, BANGLADESH
+                    </h3>
+    
+                    <h6 style="text-align:center;margin-top:20px;font-weight: bold;">Tabulation Sheet</h6>
+                    <p><strong>Second Semester BSc Engineering Examination - 2023</strong></p>
+                    <p>Held in November - December 2022</p>
+                    <p>Department of Electrical And Electronic Engineering</p>
+                </div>
+                <div class="col-4 small-text">
+                    <table class="table table-sm table-bordered border">
+    
+                        <thead>
+                            <tr style="font-weight:bold;">
+                                <td colspan="2">{{semester.name}} Semester Courses</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr style="text-align:center;font-weight:bold;">
+                                <td scope="col" class="col-3">Course Code</td>
+                                <td scope="col" class="col-5">Course Title</td>
+                                <td scope="col" class="col-2">Marks</td>
+                                <td scope="col" class="col-2">Credits</td>
+    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in courses %}
+                                <tr>
+                                    <td>{{course.course_code}}</td>
+                                    <td>{{course.name}}</td>
+                                    <td>{% multiply course.credit_point 25 %}</td>
+                                    <td>{{course.credit_point}}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr style="font-weight:bold;">
+                                {% calculate_credit_offered courses=courses as co %}
+                                <td></td>
+                                <td>Total .........</td>
+                                <td>{% multiply co 25 %}</td>
+                                <td>{{co}}</td>
+                          
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <div class="row">
+                <table class="table table-sm table-bordered border border-solid-2 small-text">
+                    <thead>
+                        <tr style="font-weight:bold;">
+                            <td rowspan="2">SN</td>
+                            <td rowspan="2">ID No</td>
+                            <td rowspan="2" style="width: 30px;">Name <br><br>Hall</td>
+                            {% for course in courses %}
+                                {% if course.course_type == "Theory"%}
+                                <td colspan="6">{{course.course_code}}</td>
+                                {% else %}
+                                <td colspan="4">{{course.course_code}}</td>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <td rowspan="2" class="vertical-text">
+                               <div> TCE
+                            </div></td>
+                            <td rowspan="2" class="vertical-text">
+                               <div> TCP
+                            </div></td>
+                            <td rowspan="2" class="vertical-text">
+                               <div> GPA
+                            </div></td>
+                            <td rowspan="2" class="vertical-text">
+                               <div> Result
+                            </div></td>
+                            <td rowspan="2">Remark</td>
+                        </tr>
+                        <tr>
+                            {% for course in courses %}
+                                {% if course.course_type == "Theory"%}
+                                <td class="vertical-text"><div> CATM</div></td>
+                                 <td class="vertical-text"><div> FEM</div></td>
+                                {% endif  %}
+                                <td class="vertical-text"><div> MO</div></td>
+                                 <td class="vertical-text"><div> LG</div></td>
+                                 <td class="vertical-text"><div> GP</div></td>
+                                 <td class="vertical-text"><div> CP</div></td>
+
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            {% with scores|hash:student as scores %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td style="font-weight:bold;">{{student.student_id}}</td>
+                            <td style="font-weight:bold;">{{student.full_name}} <br><br>{{student.hall.name}}</td>
+                            {% for co in courses %}
+                                {% with scores|hash:co.course_code as score %}
+                                {% if co.course_type == "Theory" %}
+                                <td class="vertical-text"><div> {% calculate_catm score.0.catm %}</div></td>
+                                <td class="vertical-text"><div> {{score.0.final_exam_mark|default:""}}</div></td>
+                                {% endif %}
+                                <td class="vertical-text"><div> {{score.0.mark_obtained|default:0.00}}</div></td>
+                                <td class="vertical-text"><div> {{score.0.letter_grade|default:'F'}}</div></td>
+                                <td class="vertical-text"><div> {{score.0.grade_point|default:0.00}}</div></td>
+                                <td class="vertical-text"><div> {% calculate_credit_point score.0.grade_point score.0.course.credit_point %}</div></td>
+
+                                {% endwith %}
+                            {% endfor %}
+                    
+                           
+                            {% calculate_gpa scores=scores semester=semester as status %} 
+
+                            <td class="vertical-text">
+                               <div> {% calculate_credit_earned scores=scores %}
+                            </div></td>
+                            <td class="vertical-text">
+                               <div> 50.50
+                            </div></td>
+                            <td class="vertical-text">
+                               <div> {{status.0}}
+                            </div></td>
+                            <td class="vertical-text">
+                               <div> {{status.1}}
+                            </div></td>
+                            <td></td>
+                        </tr>
+                            {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            
+          
+            <div class="row ">
+               <div class="col-12 align-bottom">
+                <div class="container mt-2" >
+                    <div class="row">
+                        <h5 class="text-center">Certified that the result have been finalized by the Examination Committee as per Ordinance, Rules & Regulations.  </h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <td>Full Name of Tabulators</td>
+                                        <td>Signature</td>
+                                    </tr>
+                                </thead>
+                                <tbody class=" align-middle">
+                                    {% for user in committee.tabulator.all %}
+                                    <tr>
+                                        <td style="min-height: 15px!important;">{{user.full_name}}</td>
+                                        <td style="min-height: 15px!important;"><br>................... <br></td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-5">
+                            <table class="table table-borderless">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">Full Name of Examination Committee</td>
+                                        <td>Signature</td>
+                                    </tr>
+                                </thead>
+                                <tbody class=" align-middle">
+                                    <tr>
+                                        <td style="min-height: 15px!important;""> {{committee.chairman.full_name}}</td>
+                                        <td style="min-height: 15px!important;""> Chairman</td>
+                                        <td style="min-height: 15px!important;""> <br>................... <br> </td>
+                                    </tr>
+                                    {% for user in committee.member.all %}
+                                    <tr>
+                                        <td style="min-height: 15px!important;"">{{user.full_name}}</td>
+                                        <td style="min-height: 15px!important;"">Member</td>
+                                        <td style="min-height: 15px!important;""> <br>................... <br></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-3">
+                           <div>
+                            Result Published On: __________________ 2022
+                            </div> 
+                            <div style="min-height: 40px;"></div>
+                            <div>
+                                <div class="row">
+                                    <div class="col-6">Controller of Examination </div>
+                                    <div class="col-6">Vice Chancellor</div>
+                                </div>
+                               
+
+                           </div>
+                        </div>
+                    </div>
+    
+                </div>
+                
+               
+               </div>
+                
+    
+            </div>
+        </div>
+        {% if not forloop.last %}
+            <p style="page-break-before: always" ></p>
+        {% endif %}
+        {% endfor %}
+    {% endwith %}
+
+   
+   
+</body>
+
+</html>

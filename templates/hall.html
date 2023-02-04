@@ -2,13 +2,13 @@
 {% load static %}
 {% load param_replace %}
 {% block title %}
-Semesters | CUBAC
+Students | CUBAC
 {% endblock title %}
 
 {% block breadcrumb %}
 <div class="d-flex justify-content-between align-items-center">   
   <h4 class="fw-bold py-2">
-    <span class="text-muted fw-light"></span>Academic Year
+    <span class="text-muted fw-light"></span>Halls
    </h4>
    <div class="d-flex justify-content-center align-items-center">
     {% if request.user.is_staff %}
@@ -16,7 +16,7 @@ Semesters | CUBAC
     type="button" 
     class="btn btn-outline-primary"  
      data-bs-toggle="modal"
-    data-bs-target="#modalacademic_year">
+    data-bs-target="#modalhall">
     <i class="bx bx-list-plus d-block d-sm-none"></i>
     <span class="d-none d-sm-block">Add New</span>
     </button>
@@ -27,7 +27,7 @@ Semesters | CUBAC
 
 {% block content %}
     <div class="row">
-      <div class="col-lg-12 mb-4">
+      <div class="col-lg-12 mb-4 order-0">
         <div class="card">
             
               <div class="card-body searchable-list">
@@ -35,23 +35,21 @@ Semesters | CUBAC
                   <div class="col-2">
                     <input type="search" id="application-search" value="" class="search-div form-control" placeholder="Search">
                   </div>
-                    <div class="col-10 d-flex">
-                     
-                    </div>
+                    
                  
                   </div>
-                  {% if academic_years %}
+                  {% if halls %}
                   <div class="row"> 
 
-                    {% for academic_year in academic_years %}
-                    <div class="col-xs-12 col-md-6">
+                    {% for hall in halls %}
+                    <div class="col-md-4 col-xs-6">
                       
-                      {% include 'card/academic_year.html' with academic_year=academic_year %}
+                      {% include 'card/hall.html' with hall=hall %}
                     </div>
                     {% endfor %}
                     
                   </div>
-                  {% include 'partials/pagination.html' with pagination=academic_years %}
+                  {% include 'partials/pagination.html' with pagination=halls %}
 
                   {% else %}
                   {% include 'card/nodata_small.html' %}
@@ -61,10 +59,11 @@ Semesters | CUBAC
         </div>
         
       </div>
-</div>
-{% include 'modal/form_modals.html' with modal_id="modalacademic_year" title="New Academic Year" form="academic_year_form" action_name="academic_year" %}
-{% include 'modal/edit_form_modals.html' %}
-    
+      </div>
+
+      {% include 'modal/form_modals.html' with modal_id="modalhall" title="New Hall" form="hall_form" action_name="hall" %}
+      {% include 'modal/edit_form_modals.html' %}
+
 {% endblock content %}
 
 {% block modal %}

@@ -1,4 +1,6 @@
 from django.urls import path
+
+from result.views import remove_section_from_score
 from .views import *
 
 urlpatterns = [
@@ -19,4 +21,6 @@ urlpatterns = [
     path('academic_year/edit/<pk>/', edit_academic_year, name="edit_academic_year"),
     path('academic_year/<pk>/', academic_year_details, name="academic_year_details"),
 
+    path('score/<student_id>/<course>/', student_course_details, name="student_course_details"),
+    path('remove_section/<pk>/<section>/', remove_section_from_score, name="remove_section_from_score"),
 ]

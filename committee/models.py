@@ -36,9 +36,13 @@ class Semester(models.Model):
 class ExamCommittee(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     academic_year = models.ForeignKey(AcademicYear, on_delete=models.SET_NULL, blank=True, null=True )
-    semester = models.ManyToManyField(Semester, related_name="semester")
+    semester = models.ManyToManyField(Semester, related_name="exam_committee")
     member = models.ManyToManyField(User, related_name="exam_committee_member")
     chairman = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    tabulator = models.ManyToManyField(User, related_name="tabulator")
+    
+    class Meta:
+        ordering = ('-academic_year',)
 
 class Course(models.Model):  
     TYPE_CHOICE = (
@@ -55,4 +59,6 @@ class Course(models.Model):
     course_type = models.CharField(max_length=40, choices=TYPE_CHOICE, null=False, default='Theory', blank=False)
     def __str__(self):
         return self.course_code
+    class Meta:
+        ordering = ('semester', 'course_code')
 

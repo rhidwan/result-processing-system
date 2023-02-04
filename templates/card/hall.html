@@ -11,10 +11,8 @@
                     
 
                     <div class="flex-grow-1">
-                        <span class="fw-semibold d-block">{{student.full_name}}</span>
-                        <span class="font-weight-bold">ID: </span> {{student.student_id}} <br>
-                        <span class="font-weight-bold">Session: </span> {{student.session}} <br>
-                        <span class="font-weight-bold">Hall: </span> {{student.hall.name}} <br>
+                        <span class="fw-semibold d-block">{{hall.name}}</span>
+                        <span class="font-weight-bold">Student Allocated: </span> {{hall.student_set.all.count}} <br>
 
                     </div>
                 </div>
@@ -28,22 +26,18 @@
               </button>
 
               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="application{{forloop.counter}}">
-                <a href="{% url 'student_detail' student.student_id %}"  class="dropdown-item">
-                  <span class="">View</span>
-                </a>
+                
               
-                {% url 'edit_student' student.student_id as student_action %}
-                <a data-url="{{student_action}}"  data-bs-toggle="modal" data-title="Edit Student" data-bs-target="#UpdateFormModal" class="dropdown-item">
+                {% url 'edit_hall' hall.id as hall_action %}
+                <a data-url="{{hall_action}}"  data-bs-toggle="modal" data-title="Edit Hall" data-bs-target="#UpdateFormModal" class="dropdown-item">
                 <span class="">Edit</span>
                 </a>
-                <a href="{{student_action}}"  class="ajax-delete dropdown-item">
+                <a href="{{hall_action}}"  class="ajax-delete dropdown-item">
                   <span class="">Delete</span>
                    </a>
               </div>
             </div>
             </div>
-
-        
 
       </div>
     </div>

@@ -1,0 +1,20 @@
+{% load static %}
+<form action="{%if action %} {{action}} {% else %} {% url action_name %}{% endif %}" method="post" class="form">
+    {% csrf_token %}
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="name" class="form-label">Name</label>
+            <input class="form-control" type="text" name="name" id="name"
+                value="{{hall.name|default:''}}" required/>
+        </div>
+        
+    <div class="row help-text text-center text-danger">
+
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary me-2 ajax-submit">Save changes</button>
+
+    </div>
+    </div>
+</form>
+
