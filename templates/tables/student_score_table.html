@@ -23,7 +23,9 @@
 
             {% for co in semester.course_set.all %}
                     {% with value|hash:co.course_code as score %}
-                    <td>{{score.0.letter_grade|default:""}}</td>
+                        {% get_score_improvement score.0 as sc %}
+                    <td>{{ sc.letter_grade|default:""}}</td>
+
                     {% endwith %}
             {% endfor %}
             

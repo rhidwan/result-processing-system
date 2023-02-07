@@ -315,13 +315,14 @@
                             <td style="font-weight:bold;">{{student.full_name}} <br><br>{{student.hall.name}}</td>
                             {% for co in courses %}
                                 {% with scores|hash:co.course_code as score %}
+                                    {% get_score_improvement score.0 as sc %}
                                 {% if co.course_type == "Theory" %}
                                 <td class="vertical-text"><div> {% calculate_catm score.0.catm %}</div></td>
-                                <td class="vertical-text"><div> {{score.0.final_exam_mark|default:""}}</div></td>
+                                <td class="vertical-text"><div> {{sc.final_exam_mark|default:""}}</div></td>
                                 {% endif %}
-                                <td class="vertical-text"><div> {{score.0.mark_obtained|default:0.00}}</div></td>
-                                <td class="vertical-text"><div> {{score.0.letter_grade|default:'F'}}</div></td>
-                                <td class="vertical-text"><div> {{score.0.grade_point|default:0.00}}</div></td>
+                                <td class="vertical-text"><div> {{sc.mark_obtained|default:0.00}}</div></td>
+                                <td class="vertical-text"><div> {{sc.letter_grade|default:'F'}}</div></td>
+                                <td class="vertical-text"><div> {{sc.grade_point|default:0.00}}</div></td>
                                 <td class="vertical-text"><div> {% calculate_credit_point score.0.grade_point score.0.course.credit_point %}</div></td>
 
                                 {% endwith %}

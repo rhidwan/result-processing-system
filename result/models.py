@@ -21,13 +21,15 @@ class ExamMark(models.Model):
         ('A', 'A'),
         ('B', 'B')
     )
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=False, null=False)
     code_no = models.CharField(max_length=50, blank=False, null=False)
     section = models.CharField(max_length=2, choices=SECTION_CHOICE, null=False, blank=False)
     is_allocated = models.BooleanField(default=False)
     marks = models.FloatField()
-
+    is_improvement = models.BooleanField(default=False)
+    
     class Meta:
         constraints = [
             UniqueConstraint(fields=['course',
@@ -42,7 +44,6 @@ class Score(models.Model):
     code_no = models.CharField(max_length=20, null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=False, null=False)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=False, null=False)
-    is_improvement = models.BooleanField(default=False)
     catm = models.ForeignKey(Catm, on_delete=models.SET_NULL, null=True, blank=True)
     section_a = models.ForeignKey(ExamMark, on_delete=models.SET_NULL, blank=True, null=True, related_name="section_a")
     section_b = models.ForeignKey(ExamMark, on_delete=models.SET_NULL, blank=True, null=True, related_name="section_b")
@@ -53,7 +54,11 @@ class Score(models.Model):
     grade_point = models.FloatField(blank=True, null=True, default=0)
     credit_point = models.FloatField(blank=True, null=True) #credit * grade point
     approved_by = models.ManyToManyField(User, related_name="approved_by")
-
+    
+    is_improvement = models.BooleanField(default=False)
+    previous_score = models.JSONField(editable=False, blank=True, null=True)
+    is_improved = models.BooleanField(default=False)
+    
     class Meta:
         constraints = [
             UniqueConstraint(fields=['course',

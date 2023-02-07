@@ -6,7 +6,7 @@
          <th>SL No</th>
           <th>Code No</th>
           <th>Mark</th>
-          
+          <th>Exam Type</th>
         
           <th>Actions</th>
         </tr>
@@ -17,7 +17,7 @@
           <td>{{forloop.counter}}</td>
           <td>{{exam_mark.code_no}}</td>
           <td>{{exam_mark.marks}}</td>
-    
+          <td>{% if exam_mark.is_improvement %} Improve {% else %}Regular{% endif %}</td>
           <td>
             <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
               <a data-url="{% url 'edit_exam_mark' exam_mark.id %}" aria-labelledby="exammark{{forloop.counter}}" data-bs-toggle="modal"

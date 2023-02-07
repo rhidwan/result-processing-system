@@ -10,9 +10,18 @@ def update_score(sender, instance, **kwargs):
         catm = instance.catm.total if instance.catm else 0
         section_a = instance.section_a.marks if instance.section_a else 0
         section_b = instance.section_b.marks if instance.section_b else 0
-        
-        instance.final_exam_mark = section_a + section_b
+    
+        final_exam_mark = section_a + section_b
         instance.mark_obtained = catm + section_a + section_b
+        instance.final_exam_mark = final_exam_mark
+
+    if instance.is_improvement:
+        previous_final_exam_mark = instance.previous_score.get("final_exam_mark", 0)
+        if previous_final_exam_mark < final_exam_mark:
+            instance.is_improved = True
+        else:
+            instance.is_improved = False
+        
 
     if instance.mark_obtained:
         ccp = instance.course.credit_point

@@ -22,6 +22,25 @@ def calculate_credit_point(gpa, cp):
     return gpa * cp
 
 @register.simple_tag
+def get_grade_point(score):
+    if score.is_improvement:
+        if not score.is_improved:
+            return score.previous_score['grade_point']
+        
+    return score.grade_point
+
+@register.simple_tag
+def get_score_improvement(score):
+    print(score)
+    try:
+        if score.is_improvement:
+            if not score.is_improved:
+                return score.previous_score
+    except:
+        pass
+    return score
+
+@register.simple_tag
 def calculate_gpa(scores, semester):
     '''
     gps = Sum(CG)/Sum(C)
@@ -34,7 +53,7 @@ def calculate_gpa(scores, semester):
         scores = new_scores
     
 
-    sum_cg = sum([score.course.credit_point * score.grade_point for score in scores if score.grade_point])
+    sum_cg = sum([score.course.credit_point * get_grade_point(score) for score in scores if get_grade_point(score)])
     sum_c = sum([course.credit_point for course in semester.course_set.all()])
 
     gpa =round( sum_cg / sum_c, 2)
@@ -56,7 +75,7 @@ def calculate_credit_earned(scores):
             new_scores += v
         scores = new_scores
         
-    return sum([score.course.credit_point  for score in scores if score.grade_point and score.grade_point > 0 ])
+    return sum([score.course.credit_point  for score in scores if get_grade_point(score) and get_grade_point(score) > 0 ])
 
 @register.simple_tag
 def define(val=None):

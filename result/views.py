@@ -7,6 +7,7 @@ from committee.models import AcademicYear, Course, ExamCommittee, Semester
 from result.forms import ExamMarkForm, CatmForm
 from result.models import Catm, ExamMark, Score
 from django.contrib import messages
+from result.serializers import ScoreSerializer
 from result.utils import render_to_pdf
 from django.contrib.auth.decorators import login_required
 
@@ -133,10 +134,12 @@ def exam_mark(request):
     if not course:
         return 
 
-    if request.method == "POST":
+    if request.method == "POST":            
         course = get_object_or_404(Course, id=course)
         data = request.POST
         section = request.POST.get('section', None)
+        is_improvement = bool(request.POST.get('is_improvement', '0'))
+
         if not section:
             return
 
@@ -158,7 +161,7 @@ def exam_mark(request):
             mark = av[1]
             
 
-            exam_mark, created = ExamMark.objects.get_or_create(section=section,code_no=code_no, marks=mark, course=course)
+            exam_mark, created = ExamMark.objects.get_or_create(section=section,code_no=code_no, marks=mark, course=course, is_improvement=is_improvement)
             exam_mark.save()
 
         messages.success(request, "Successfully Updated Exam Mark")
@@ -287,6 +290,13 @@ def id_code_mapping(request):
                 # continue
             score, created = Score.objects.get_or_create(course=course, student=student)
             exam_mark = ExamMark.objects.get(course=course, code_no=code_no, section=section)
+
+            if exam_mark.is_improvement:
+                if not score.previous_score:
+                    score_data = ScoreSerializer(score)
+                    score.previous_score = score_data.data
+                    score.is_improvement = True
+            
             if section == 'A':
                 score.section_a = exam_mark
             elif section == "B":

@@ -189,8 +189,9 @@
                             <td>{{score.course.course_code}}</td>
                             <td>{{score.course.name}}</td>
                             <td class="text-center">{{score.course.credit_point}}</td>
-                            <td class="text-center">{{score.letter_grade|default:""}}</td>
-                            <td class="text-center">{{score.grade_point|default:""}}</td>
+                            {% get_score_improvement score as sc %}
+                            <td class="text-center">{{sc.letter_grade|default:""}}</td>
+                            <td class="text-center">{{sc.grade_point|default:""}}</td>
                         </tr>
                         {% endfor %}
                       
