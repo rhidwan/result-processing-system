@@ -33,7 +33,9 @@
                     </div>
                     </div>
                 <div class="card-body">
-                    {% include 'tables/semester_student_table.html' with scores=scores %}
+                    
+                    {% get_unallocated_course semester=semester scores=scores as unallocated%}
+                    {% include 'tables/semester_student_table.html' with scores=scores unallocated=unallocated%}
                     <div>
                         <div class="row">
                             {% calculate_gpa scores=scores semester=semester as status %} 

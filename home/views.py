@@ -8,6 +8,7 @@ from datetime import datetime
 def home(request):
     if request.user.is_staff:
         applications = []
+
         return render(request, 'index.html')
 
     else:

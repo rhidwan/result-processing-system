@@ -138,7 +138,8 @@ def exam_mark(request):
         course = get_object_or_404(Course, id=course)
         data = request.POST
         section = request.POST.get('section', None)
-        is_improvement = bool(request.POST.get('is_improvement', '0'))
+        print(request.POST.get('is_improvement', '0'), type(request.POST.get('is_improvement', '0')))
+        is_improvement = True if str(request.POST.get('is_improvement', '0')) == "1" else False
 
         if not section:
             return
@@ -296,7 +297,7 @@ def id_code_mapping(request):
                     score_data = ScoreSerializer(score)
                     score.previous_score = score_data.data
                     score.is_improvement = True
-            
+
             if section == 'A':
                 score.section_a = exam_mark
             elif section == "B":

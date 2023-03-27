@@ -53,14 +53,14 @@ Students | CUBAC
 
                       <div class="dropdown me-2">
 
-                        {% regroup students by hall as halls %}
+                        {% regroup students by hall as st_halls %}
                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Hall: {% if filters.hall %}{% for group in halls %} {% if group.grouper.id|stringformat:'s'  == filters.hall %} {{group.grouper.name}} {%endif%}  {% endfor %} {% endif %}
+                          Hall: {% if filters.hall %}{% for group in st_halls %} {% if group.grouper.id|stringformat:'s'  == filters.hall %} {{group.grouper.name}} {%endif%}  {% endfor %} {% endif %}
                         </button>
                         <ul class="dropdown-menu  dropdown-menu-end">
                           <li><a class="dropdown-item {% if not filters.hall %}active{% endif %} " href="?{% param_replace hall=''  %}">All</a></li>
                           
-                          {% for group in halls %}
+                          {% for group in st_halls %}
                               <li><a class="dropdown-item {% if group.grouper.id|stringformat:'s'  == filters.hall %}active{% endif %}" href="?{% param_replace hall=group.grouper.id  %}">{{ group.grouper.name }}</a></li>
                           {% endfor %}
                         </ul>

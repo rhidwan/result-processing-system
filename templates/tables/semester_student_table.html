@@ -32,6 +32,24 @@
           </td> -->
         </tr>
        {% endfor %}
+       {% for course in unallocated %}
+        <tr>
+      
+          <td>{{course.course_code}}</td>
+          <th>{{course.credit_point}}</th>
+
+          <td></td>
+            <td></td>
+          <!-- <td>
+            <div class="dropdown">
+              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+             
+            </div>
+          </td> -->
+        </tr>
+       {% endfor %}
 
       </tbody>
     </table>

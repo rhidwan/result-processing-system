@@ -60,6 +60,12 @@ def calculate_gpa(scores, semester):
     status = "F" if gpa < 2.20 else 'P'
     return gpa, status
 
+
+@register.simple_tag
+def get_unallocated_course(semester, scores=[]):
+    score_courses = [x.course for x in scores]
+    return  [ x for x in  semester.course_set.all() if x not in score_courses]
+
 @register.simple_tag
 def calculate_credit_offered(semester=None, courses=None):
     if semester:
