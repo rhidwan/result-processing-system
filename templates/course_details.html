@@ -19,6 +19,7 @@
 </div>
 {% endblock breadcrumb %}
 
+
 {% block content %}
     <div class="row">
      
@@ -31,11 +32,17 @@
                     <div class="card-header d-flex justify-content-between align-items-center">   
                         <h5 class="mb-0">Score</h5>
                     
-                        
-                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                            data-bs-target="#modalcatm">
-                            <i class="bx bx-list-plus d-block d-sm-none"></i>
-                            <span class="d-none d-sm-block">Add CATM</span>
+                            <div>
+                                <button type="button" class="btn btn-outline-primary me-1" data-bs-toggle="modal"
+                                data-bs-target="#modalcatm">
+                                <i class="bx bx-list-plus d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Add CATM</span>
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#modalexcelcatm">
+                                <i class="bx bx-list-plus d-block d-sm-none"></i>
+                                <span class="d-none d-sm-block">Import From Excel</span>
+                            </div>
+                            
                         </button>
                        
                   
@@ -143,6 +150,7 @@
     {% concat_all catm_action '?course=' course.id as action %}
     {% include 'modal/form_modals.html' with modal_id="modalcatm" title="New CATM" form="catm_form" action=action lg_modal=True %}
 
+    {% include 'modal/form_modals.html' with modal_id="modalexcelcatm" title="Import from Excel File" form="excel_input_form" %}
     {% if course.course_type == "Theory" %}
 
     {% url 'exam_mark' as exam_mark_action %}

@@ -36,6 +36,15 @@ def update_score(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Catm)
 def update_catm(sender, instance, **kwargs):
-        
-    instance.total = instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.attendance
+    ccp = instance.course.credit_point
+    if ccp == 2:
+        ct_marks = sum( instance.ct_1 + instance.ct_2 + instance.ct_3 ) - min(instance.ct_1 + instance.ct_2 + instance.ct_3) 
+    elif ccp==3:
+        ct_marks = sum( instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4) - min(instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4)
+    elif ccp==4:
+        ct_marks = sum( instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4) - min(instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4)
+    gross_ct_marks = round(ct_marks/ccp,2)
+
+    instance.total = gross_ct_marks + instance.attendance
+    
     print(sender, instance, "Signal Fired")

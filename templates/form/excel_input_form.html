@@ -1,0 +1,107 @@
+{% load static %}
+<form action="{%if action %} {{action}} {% else %} {% url action_name %}{% endif %}"  id="excel-catm-upload" method="post" class="form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+        <div class="mb-3 col-md-12"  >
+
+            <label for="formFile" class="form-label">File</label>
+            <input class="form-control" type="file" accept=".xlsx,.xls" id="formFile">
+
+    </div>
+        <div class="mb-3 col-md-6">
+            
+            <label for="type" class="form-label">Input Type</label>
+                <select class="form-select" id="input_type" name="input_type"  required>
+                    <option value="">Select an option</option>
+                     <option value="catm_ct" >CATM Marks </option>
+                     <option value="exam_mark" >Exam_mark With Code </option>
+                     <option value="code_mapping" >Student list with Code  </option>
+
+                   </select>
+        </div>
+
+        
+       
+        <div class="mb-3 col-md-6">
+            <label for="header_row" class="form-label">Header row</label>
+                <input class="form-control" type="number" id="header_row" placeholder="The row where the headers are at." value="1">
+        </div>
+        
+        <div class="specific-input-catm specific-input" style="display: none;">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="student_col" class="form-label">Student Id Column Name</label>
+                        <input class="form-control" type="text" id="student_col"  value="Student Id">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="student_col" class="form-label">Att Mark Column Name</label>
+                        <input class="form-control" type="text" id="at_mark_col"  value="AT Marks">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="ct_1_mark_col" class="form-label">Ct 1 Mark Column Name</label>
+                    <input class="form-control" type="text" id="ct_1_mark_col" name="ct_1_mark_col" value="CT-1">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="ct_2_mark_col" class="form-label">Ct 2 Mark Column Name</label>
+                    <input class="form-control" type="text" id="ct_2_mark_col" name="ct_2_mark_col" value="CT-2">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="ct_3_mark_col" class="form-label">Ct 3 Mark Column Name</label>
+                    <input class="form-control" type="text" id="ct_3_mark_col" name="ct_3_mark_col" value="CT-3">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="ct_4_mark_col" class="form-label">Ct 4 Mark Column Name</label>
+                    <input class="form-control" type="text" id="ct_4_mark_col" name="ct_4_mark_col" value="CT-4">
+                </div>
+            </div>
+        </div>
+        <div class="specific-input-exam-mark-code specific-input" style="display: none;">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="code_col" class="form-label">Code Column Name</label>
+                        <input class="form-control" type="text" id="code_col"  value="Code No">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="mark_col" class="form-label">Mark Column Name</label>
+                        <input class="form-control" type="text" id="mark_col"  value="SUM">
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="section" class="form-label">Sectione</label>
+                    <input class="form-control" type="text" id="section"  value="A">
+                </div>
+            </div>
+        </div>
+        
+
+        
+   
+    </div>
+    <div class="row help-text text-center text-danger">
+
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary me-2 ajax-submit">Save changes</button>
+
+    </div>
+</form>
+
+
+<script>
+   $('select[name=input_type]').change(function(){
+    var tmp = this.value;
+    // $('.form-row').hide();
+
+    if(tmp=="catm_ct") {
+        $('.specific-input').hide();
+        $('.specific-input-catm').show();
+    } else if(tmp=="exam_mark") {
+        $('.specific-input').hide();
+        $('.specific-input-exam-mark-code').show();
+
+    } else if (tmp=="code_mapping"){
+        $('.specific-input').hide();
+
+    }
+
+});
+</script>

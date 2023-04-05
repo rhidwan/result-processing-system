@@ -42,9 +42,14 @@ def catm(request):
                     ct_3 = float(data.get('ct_three'+suffix, 0))
                 except:
                     ct_3 = 0
+                
+                try:
+                    ct_4 = float(data.get('ct_four'+suffix, 0))
+                except:
+                    ct_4 = 0
           
         
-                catm_marks.append([value, attendance, ct_1, ct_2, ct_3])
+                catm_marks.append([value, attendance, ct_1, ct_2, ct_3, ct_4])
         
         print(catm_marks)
         for av in catm_marks:
@@ -53,10 +58,11 @@ def catm(request):
             ct_1 = av[2]
             ct_2 = av[3]
             ct_3 = av[4]
+            ct_4 = av[5]
 
             student = Student.objects.get(student_id=student_id)
 
-            catm, created = Catm.objects.get_or_create(student=student, attendance=attendance, ct_1=ct_1, ct_2=ct_2, ct_3=ct_3)
+            catm, created = Catm.objects.get_or_create(student=student, attendance=attendance, ct_1=ct_1, ct_2=ct_2, ct_3=ct_3, ct_4=ct_4)
             catm.save()
 
             score, created = Score.objects.get_or_create(course=course, student=student)

@@ -23,7 +23,10 @@
                         {% include 'form/student_form.html' with action_name=action_name student=student halls=halls%}
                     
                     {% elif form == "catm_form" %}
-                        {% include 'form/catm_form.html' with action_name=action_name achievement_membership=achievement_membership %}
+                        {% include 'form/catm_form.html' with action_name=action_name  %}
+                    
+                    {% elif form == "excel_input_form" %}
+                        {% include 'form/excel_input_form.html' with action_name=action_name  %}
                     
                     {% elif form == "exam_mark_form" %}
                         {% include 'form/exam_mark_form.html' with action=action exam_mark=exam_mark %}

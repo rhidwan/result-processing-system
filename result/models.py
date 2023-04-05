@@ -14,6 +14,7 @@ class Catm(models.Model):
     ct_1 = models.FloatField(blank=False, null=False)
     ct_2 = models.FloatField(blank=False, null=False)
     ct_3 = models.FloatField(blank=False, null=False)
+    ct_4 = models.FloatField(blank=True, null=True)
     total = models.FloatField(default=0)
 
 class ExamMark(models.Model):
