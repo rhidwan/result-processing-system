@@ -12,10 +12,10 @@ class Student(models.Model):
         ('MSc', 'MSc')
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    full_name = models.CharField(max_length=250, null=False, blank=False)
+    full_name = models.CharField(max_length=250, null=True, blank=True)
     student_id =  models.CharField(max_length=10, null=False, blank=False, unique=True)
-    degree = models.CharField(max_length=20, choices=TYPE_CHOICE, null=False, blank=False)
-    session = models.CharField(max_length=50, null=False, blank=False)
+    degree = models.CharField(max_length=20, choices=TYPE_CHOICE, null=True, blank=True)
+    session = models.CharField(max_length=50, null=True, blank=True)
     hall= models.ForeignKey(Hall, on_delete=models.SET_NULL, blank=True, null=True )
     
     class Meta:

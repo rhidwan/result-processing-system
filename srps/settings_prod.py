@@ -23,13 +23,13 @@ DEBUG = False
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = '#=(1s4wid*djhn#++d!s(3v^s4&ngdpgj%^ilc0#@+%j%z-+w('
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
 # print("base dir prod", BASE_DIR)
-# ALLOWED_HOSTS = ['www.cubac.online']
+ALLOWED_HOSTS = ['www.eeecu.com', "*.eeecu.com"]
 
 
 # Application definition
@@ -46,34 +46,33 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-    'rest_framework',
-    'rest_auth',
-    'rest_auth.registration',
+    # 'rest_framework',
+    # 'rest_auth',
+    # 'rest_auth.registration',
     'crispy_forms',
+    # 'debug_toolbar',
+    # 'django_extensions',
+
     'user',
     'functions',
     'home',
     
-    'profiles',
-    'call_applications',
-    'applications',
-
-
+    'students',
+    'committee',
+    'result',
 ]
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
+        'NAME': 'srps',
+        'USER': 'srps_admin',
+        'PASSWORD': 'denfdsfje32442@',
         'HOST': 'localhost',
         'PORT': '',
     }
 }
-
-
 
 
 
@@ -109,7 +108,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'srps.wsgi.application'
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -129,6 +127,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Internationalization
+# https://docs.djangoproject.com/en/3.0/topics/i18n/
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 LANGUAGE_CODE = 'en-us'
 
@@ -145,8 +150,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
+# 
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
 
 PDF_STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -178,24 +187,6 @@ ACCOUNT_ADAPTER = 'user.adapters.CustomUserAccountAdapter'
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
-#bkash config
-
-BKASH_APP_KEY = 'abcdxx2369'
- # bkash app key
-BKASH_APP_SECRET = 'bkashSup3rS3cRet'
-BKASH_APP_USERNAME ='sandboxTestUser' 
-BKASH_APP_PASSWORD =  'sandboxTestPassword'
-# BKASH_APP_VERSION = // bkash app version
-BKASH_APP_BASE_URL = 'https://checkout.sandbox.bka.sh/v1.2.0-beta' #// bkash app base url
-BKASH_APP_PAYMENT_TOKEN_GRANT_URL = '%s/checkout/token/grant' % (BKASH_APP_BASE_URL)
-BKASH_APP_PAYMENT_CREATE_URL = '%s/checkout/payment/create' % (BKASH_APP_BASE_URL)
-BKASH_APP_PAYMENT_EXECUTE_URL = '%s/checkout/payment/execute' % (BKASH_APP_BASE_URL)
-
-#sslcommerz config
-SSL_STORE_ID = 'chitt62824a465e6b1'
-SSL_STORE_SECRET = 'chitt62824a465e6b1@ssl'
-
 DJANGORESIZED_DEFAULT_SIZE = [300, 300]
 DJANGORESIZED_DEFAULT_QUALITY = 75
 DJANGORESIZED_DEFAULT_KEEP_META = True
@@ -203,10 +194,4 @@ DJANGORESIZED_DEFAULT_FORCE_FORMAT = 'JPEG'
 DJANGORESIZED_DEFAULT_FORMAT_EXTENSIONS = {'JPEG': ".jpg"}
 DJANGORESIZED_DEFAULT_NORMALIZE_ROTATION = True
 
-
 LOGIN_URL = reverse_lazy('login')
-
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-

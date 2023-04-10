@@ -2,7 +2,7 @@ from result.utils import get_letter_grade_point
 from .models import Score, Catm
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-
+import math
 
 @receiver(pre_save, sender=Score)
 def update_score(sender, instance, **kwargs):
@@ -38,13 +38,13 @@ def update_score(sender, instance, **kwargs):
 def update_catm(sender, instance, **kwargs):
     ccp = instance.course.credit_point
     if ccp == 2:
-        ct_marks = sum( instance.ct_1 + instance.ct_2 + instance.ct_3 ) - min(instance.ct_1 + instance.ct_2 + instance.ct_3) 
+        ct_marks =  instance.ct_1 + instance.ct_2 + instance.ct_3 - min(instance.ct_1 , instance.ct_2 , instance.ct_3) 
     elif ccp==3:
-        ct_marks = sum( instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4) - min(instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4)
+        ct_marks =  instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4 - min(instance.ct_1 , instance.ct_2 , instance.ct_3 , instance.ct_4)
     elif ccp==4:
-        ct_marks = sum( instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4) - min(instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4)
+        ct_marks =  instance.ct_1 + instance.ct_2 + instance.ct_3 + instance.ct_4 - min(instance.ct_1 , instance.ct_2 , instance.ct_3 , instance.ct_4)
     gross_ct_marks = round(ct_marks/ccp,2)
 
-    instance.total = gross_ct_marks + instance.attendance
-    
+    instance.total = math.ceil(gross_ct_marks + instance.attendance)
+
     print(sender, instance, "Signal Fired")

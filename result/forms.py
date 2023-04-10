@@ -15,4 +15,4 @@ class CatmForm(forms.ModelForm):
 
     class Meta:
         model = Catm
-        exclude = ('student', 'total' )
+        exclude = ('student', 'total', 'course' )

@@ -9,6 +9,7 @@ from user.models import User
 # Create your models here.
 class Catm(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=False, null=False)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, blank=False, null=False)
     attendance = models.FloatField(blank=False, null=False)
     ct_1 = models.FloatField(blank=False, null=False)

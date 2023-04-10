@@ -51,7 +51,6 @@ def exam_committee(request):
     
     elif request.method == "POST":
         print(request.POST)
-        academic_year, created = AcademicYear.objects.get_or_create(request.POST.get('academic_year', None))
         
         # updated_request = request.POST.copy()
         # updated_request.update({'academic_year': academic_year.id})
@@ -98,7 +97,7 @@ def edit_exam_committee(request, pk):
             return JsonResponse({"status": "success", "msg": "Done."}, status=201)
 
         else:
-            messages.error(request, "Failed To Update Work Experience")
+            messages.error(request, "Failed To Update Exam Committee")
             err_msg = ""
             for field, errors in form.errors.items():
                 for error in errors:
@@ -176,7 +175,7 @@ def course(request):
 
 def course_details(request, pk):
     course = get_object_or_404(Course, id=pk)
-    scores = Score.objects.filter(course=course).prefetch_related('catm', 'catm__student')
+    scores = Score.objects.filter(course=course).prefetch_related('catm', 'catm__student', 'section_a__course', 'section_b__course', 'course')
     exam_marks = ExamMark.objects.filter(course=course, is_allocated=False).order_by('section')
     return render(request, 'course_details.html', {"course": course, "scores": scores, "exam_marks": exam_marks})
 

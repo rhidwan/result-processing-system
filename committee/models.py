@@ -1,6 +1,8 @@
 from django.db import models
 
 from user.models import User
+from django.db.models import UniqueConstraint
+
 import uuid
 
 class AcademicYear(models.Model):
@@ -31,7 +33,12 @@ class Semester(models.Model):
 
     class Meta:
         ordering = ("-academic_year", 'name')
-
+        constraints = [
+            UniqueConstraint(fields=['name',
+                'academic_year'],
+                name='academic_year_semester_unique',
+            ),
+        ]
 
 class ExamCommittee(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

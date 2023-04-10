@@ -1,4 +1,5 @@
 from itertools import groupby
+import math
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -12,6 +13,7 @@ from result.utils import render_to_pdf
 from django.contrib.auth.decorators import login_required
 
 from students.models import Student
+import pandas as pd
 
 
 def catm(request):
@@ -62,7 +64,7 @@ def catm(request):
 
             student = Student.objects.get(student_id=student_id)
 
-            catm, created = Catm.objects.get_or_create(student=student, attendance=attendance, ct_1=ct_1, ct_2=ct_2, ct_3=ct_3, ct_4=ct_4)
+            catm, created = Catm.objects.get_or_create(student=student, attendance=attendance, ct_1=ct_1, ct_2=ct_2, ct_3=ct_3, ct_4=ct_4, course=course)
             catm.save()
 
             score, created = Score.objects.get_or_create(course=course, student=student)
@@ -295,15 +297,29 @@ def id_code_mapping(request):
             student = Student.objects.get(student_id=student_id)
             # except:
                 # continue
-            score, created = Score.objects.get_or_create(course=course, student=student)
+            score, score_created = Score.objects.get_or_create(course=course, student=student)
             exam_mark = ExamMark.objects.get(course=course, code_no=code_no, section=section)
 
-            if exam_mark.is_improvement:
+            # if exam_mark.is_improvement:
+            #     if not score.previous_score:
+            #         score_data = ScoreSerializer(score)
+            #         score.previous_score = score_data.data
+            #         score.is_improvement = True
+
+            #Lets change things a bit
+            #If the score entry is created, and the score has previous entries Like section A and section B
+            #Then it's a new/regular entry. If it has already, then it's an improvement entry
+            print(score_created, bool(score.section_a), bool(score.section_b))
+            if not score_created and (score.section_a and score.section_b):
+                #it's an improvement entry
+                print("it's an improvement entry")
                 if not score.previous_score:
                     score_data = ScoreSerializer(score)
                     score.previous_score = score_data.data
                     score.is_improvement = True
-
+                    score.section_a = None
+                    score.section_b = None
+                    
             if section == 'A':
                 score.section_a = exam_mark
             elif section == "B":
@@ -414,3 +430,171 @@ def generate_tabulation_sheet(request, semester):
         return response
     return HttpResponse("Not found")
     
+def import_from_excel(request):
+    course = request.GET.get('course', None)
+    if not course:
+        return JsonResponse({"status":"error", "msg": "Course Not Specified"}, status=200)
+
+
+    if request.method == "POST":            
+        course = get_object_or_404(Course, id=course)
+        excel = request.FILES['file']
+        header = request.POST.get('header_row', 1)
+        input_type = request.POST.get('input_type', None)
+        if not input_type:
+            return JsonResponse({"status":"error", "msg": "Import Type Not Selected"}, status=200)
+
+        
+        df = pd.read_excel(excel, header= int(header)-1)
+        df.dropna()
+
+        if input_type == "catm":
+            student_col = request.POST.get('student_col', "")
+            at_mark_col = request.POST.get('at_mark_col', "")
+            ct_1_col = request.POST.get('ct_1_mark_col', "")
+            ct_2_col = request.POST.get('ct_2_mark_col', "")
+            ct_3_col = request.POST.get('ct_3_mark_col', "")
+            ct_4_col = request.POST.get('ct_4_mark_col', "")
+
+            if any(x not in df.columns for x in [student_col, at_mark_col, ct_1_col, ct_2_col]):
+                print("Columns NOT Found")
+
+                return JsonResponse({"status":"error", "msg": "Specified Columns Not found. Please make sure if the Header row is the correct one"}, status=200)
+
+            catm_marks = []
+            for index,row in df.iterrows():
+                student_id = str(int(row[student_col]))
+                at_mark = row[at_mark_col] 
+                ct_1 = row[ct_1_col]
+                ct_2 = row[ct_2_col]
+                ct_3 = row[ct_3_col]
+                if course.credit_point > 2:
+                    ct_4 = row[ct_4_col]
+                else:
+                    ct_4 = 0
+
+                catm_marks.append([student_id, at_mark, ct_1, ct_2, ct_3, ct_4])
+            
+            for av in catm_marks:
+                try:
+                    student_id = av[0]
+                    attendance = av[1]
+                    ct_1 = av[2]
+                    ct_2 = av[3]
+                    ct_3 = av[4]
+                    ct_4 = av[5]
+
+                    if not student_id :
+                        continue
+
+                    student, created = Student.objects.get_or_create(student_id=student_id)
+
+                    catm, created = Catm.objects.get_or_create(student=student, attendance=attendance, ct_1=ct_1, ct_2=ct_2, ct_3=ct_3, ct_4=ct_4, course=course)
+                    catm.save()
+
+                    score, created = Score.objects.get_or_create(course=course, student=student)
+
+                    score.catm = catm
+                    score.save()
+                except:
+                    import traceback;traceback.print_exc()
+
+            messages.success(request, "Successfully Updated")
+            return JsonResponse({"status": "success", "msg": "Done."}, status=201)
+
+
+        elif input_type == "exam_mark":
+            code_col = request.POST.get('mark_code_col', "")
+            mark_col = request.POST.get('mark_mark_col', "")
+            section = request.POST.get('section', "A").upper()
+            
+            if any(x not in df.columns for x in [code_col, mark_col]):
+                print("Columns NOT Found")
+                return JsonResponse({"status":"error", "msg": "Specified Columns Not found. Please make sure if the Header row is the correct one"}, status=200)
+
+            exam_marks = []
+            
+            for index,row in df.iterrows():
+                print(row[code_col], row[mark_col])
+                exam_marks.append([row[code_col], row[mark_col]])
+            print("Exam Mark,", exam_marks)
+            for av in exam_marks:
+                code_no = av[0]
+                mark = av[1]
+                print(code_no, mark, section, "creating")
+                
+                if pd.isna(code_no) or pd.isna(mark):
+                    continue
+
+
+                exam_mark, created = ExamMark.objects.get_or_create(section=section,code_no=code_no, marks=mark, course=course)
+                exam_mark.save()
+
+            messages.success(request, "Successfully Updated")
+            return JsonResponse({"status": "success", "msg": "Done."}, status=201)
+
+
+            
+        elif input_type == "code_mapping":
+            code_col = request.POST.get('std_code_col', "")
+            std_id_col = request.POST.get('std_id_col', "")
+            section = request.POST.get('std_section', "A").upper()
+            
+            if any(x not in df.columns for x in [code_col, std_id_col]):
+                print("Columns NOT Found")
+                return JsonResponse({"status":"error", "msg": "Columns Not found. Please make sure if the Header row or column names are correct!"}, status=200)
+
+            mappings = []
+            
+            for index,row in df.iterrows():
+                print(row[code_col], row[std_id_col])
+                try:
+                    mappings.append([str(int(row[std_id_col])), row[code_col]])
+                except:
+                    pass
+                    
+            for av in mappings:
+                student_id = av[0]
+                code_no = av[1]
+                
+                if pd.isna(code_no) or pd.isna(student_id):
+                    continue
+                # try:
+                print(student_id)
+                student = Student.objects.get(student_id=student_id)
+                # except:
+                    # continue
+                score, score_created = Score.objects.get_or_create(course=course, student=student)
+                exam_mark = ExamMark.objects.get(course=course, code_no=code_no, section=section)
+
+                # if exam_mark.is_improvement:
+                #     if not score.previous_score:
+                #         score_data = ScoreSerializer(score)
+                #         score.previous_score = score_data.data
+                #         score.is_improvement = True
+
+                #Lets change things a bit
+                #If the score entry is created, and the score has previous entries Like section A and section B
+                #Then it's a new/regular entry. If it has already, then it's an improvement entry
+                if score_created and not score.section_a and not score.section_b:
+                    #it's an improvement entry
+                    if not score.previous_score:
+                        score_data = ScoreSerializer(score)
+                        score.previous_score = score_data.data
+                        score.is_improvement = True
+                        
+                if section == 'A':
+                    score.section_a = exam_mark
+                elif section == "B":
+                    score.section_b = exam_mark
+                
+                exam_mark.is_allocated = True
+                exam_mark.save()
+                score.save()
+                
+
+            messages.success(request, "Successfully Updated")
+            return JsonResponse({"status": "success", "msg": "Done."}, status=201)
+
+
+        

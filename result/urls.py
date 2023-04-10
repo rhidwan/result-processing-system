@@ -22,4 +22,5 @@ urlpatterns = [
     path('grade_sheet/<semester>/<student_id>/', generate_grade_sheet, name="generate_grade_sheet"),
     path('tabulation_sheet/<semester>/', generate_tabulation_sheet, name="generate_tabulation_sheet"),
 
+    path('excel/import/', import_from_excel, name="import_score_from_excel"),
 ]
