@@ -506,7 +506,8 @@ def import_from_excel(request):
         elif input_type == "exam_mark":
             code_col = request.POST.get('mark_code_col', "")
             mark_col = request.POST.get('mark_mark_col', "")
-            section = request.POST.get('section', "A").upper()
+            print(request.POST.get('mark_section'))
+            section = request.POST.get('mark_section', "A").upper()
             
             if any(x not in df.columns for x in [code_col, mark_col]):
                 print("Columns NOT Found")
@@ -538,6 +539,7 @@ def import_from_excel(request):
         elif input_type == "code_mapping":
             code_col = request.POST.get('std_code_col', "")
             std_id_col = request.POST.get('std_id_col', "")
+            print(request.POST.get('std_section'))
             section = request.POST.get('std_section', "A").upper()
             
             if any(x not in df.columns for x in [code_col, std_id_col]):
