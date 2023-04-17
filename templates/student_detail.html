@@ -26,7 +26,7 @@
                 <!-- Result Card -->
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">   
-                    <h5 class="mb-0">{{semester.name}} Semester</h5>
+                    <h5 class="mb-0">{{semester.name}} Semester, {{semester.academic_year.name}}</h5>
                     
                     <div>
                         <a href="{% url 'generate_grade_sheet' semester.id student.student_id %}" class="btn btn-primary">Generate Grade Sheet</a>

@@ -172,7 +172,7 @@ def student_detail(request, student_id):
     student = student[0]
 
     # semesters = student.score_set.values_list('course__semester').distinct()
-    scores = student.score_set.all().order_by('course__semester')
+    scores = student.score_set.all().order_by('course__semester').prefetch_related('course', 'course__semester', "course__semester__academic_year")
     semester_dict = {}
 
     for semester, group in groupby(scores, lambda x: x.course.semester):
