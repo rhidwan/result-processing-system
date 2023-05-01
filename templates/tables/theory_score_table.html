@@ -13,7 +13,8 @@
           <th>CATM</th>
           <th>Section A</th>
           <th>Section B</th>
-
+          <th>MO</th>
+          <th>LG</th>
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
@@ -31,7 +32,8 @@
           <td>{{score.catm.total}}</td>
           <td>{{score.section_a.marks}}</td>
           <td>{{score.section_b.marks}}</td>
-
+          <td>{{score.mark_obtained|default:0.00}}</td>
+          <td>{{score.letter_grade|default:'F'}}</td>
          
         </tr>
        {% endfor %}
